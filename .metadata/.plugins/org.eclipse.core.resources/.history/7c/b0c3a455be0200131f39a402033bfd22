@@ -1,0 +1,78 @@
+package bob.com.level;
+
+import bob.com.player.Player;
+import bob.com.tiles.Tile;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
+
+public class WorldRenderer {
+
+	private World world;
+	private OrthographicCamera cam;
+    private SpriteBatch spriteBatch;
+    private Texture tileTexture;
+	public OrthographicCamera getCam() {
+		return cam;
+	}
+
+	public void setCam(OrthographicCamera cam) {
+		this.cam = cam;
+	}
+
+	/** for debug rendering **/
+	ShapeRenderer debugRenderer = new ShapeRenderer();
+
+	public WorldRenderer(World world) {
+		this.world = world;
+		this.cam = new OrthographicCamera(10, 7);
+		this.cam.position.set(5, 3.5f, 0);
+		this.cam.update();
+        spriteBatch = new SpriteBatch();
+        loadTextures();
+	}
+	private void loadTextures() {
+		tileTexture = new Texture(Gdx.files.internal("images/block.png"));
+	}
+	private void drawBlocks() {
+
+	}
+	public void render() {
+		drawdebug();
+	}
+	
+	public void drawdebug() {
+		// render blocks
+		debugRenderer.setProjectionMatrix(cam.combined);
+		debugRenderer.begin(ShapeType.Filled);
+		for(Tile tile : world.getTiles()) {
+			float x1 = tile.getBounds().x;
+			float y1 = tile.getBounds().y;
+			debugRenderer.setColor(new Color(0, 255, 255, 0));
+			debugRenderer.rect(x1,y1 ,
+					tile.getBounds().width,
+					tile.getBounds().height);
+		
+//			debugRenderer.setColor(new Color(255, 0, 255, 0));
+//			debugRenderer.rect(tile.getPosition().x,tile.getPosition().y ,
+//					tile.getBounds().width,
+//					tile.getBounds().height);
+			}
+
+		// render Bob
+		Player player = world.getPlayer();
+		Rectangle rect = player.getBounds();
+		float x1 = player.getPosition().x;
+		float y1 = player.getPosition().y;
+		debugRenderer.setColor(new Color(255,0,255,255));
+		debugRenderer.rect(x1, y1, rect.width, rect.height);
+		debugRenderer.end();
+	}
+}

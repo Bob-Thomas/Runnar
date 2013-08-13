@@ -37,17 +37,15 @@ public class World {
 	}
 	public void update(float delta)
 	{
-		random  = 1;
+		random  ++;
 		if (random > 3){
 			random = 0;
 		}
 		if( player.getPosition().x > tiles.size-6 ){
 			generateRandom(random);
 		}
-		for(Tile tile : tiles)
-		{
-			tile.update(delta);
-		}
+
+
 	}
 	private void generateRandom(int random){
 
@@ -85,12 +83,15 @@ public class World {
 	}
 	private void generateLevel() {
   
-		player = new Player(new Vector2(0, 0));
-		tiles.add(new Tile(new Vector2(tiles.size,  0)));
+		player = new Player(new Vector2(0, 2));
+		tiles.add(new Tile(new Vector2(tiles.size, 1)));
 		tiles.add(new Tile(new Vector2(tiles.size, 0)));
 		tiles.add(new Tile(new Vector2(tiles.size, 0)));
 		tiles.add(new Tile(new Vector2(tiles.size, 0)));
-		tiles.add(new Tile(new Vector2(tiles.size, 0)));
+		tiles.add(new Tile(new Vector2(tiles.size, 1)));
+		tiles.add(new Tile(new Vector2(tiles.size-1, 0
+				)));
+
 
 
  			 			

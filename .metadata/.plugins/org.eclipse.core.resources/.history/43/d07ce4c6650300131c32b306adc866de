@@ -1,0 +1,98 @@
+package bob.com.level;
+
+
+import sun.rmi.runtime.Log;
+import bob.com.player.Player;
+import bob.com.tiles.Tile;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+
+public class World {
+	private int random = 0;
+	/** The blocks making up the world **/
+	Array<Tile> tiles = new Array<Tile>();
+	
+	public Array<Tile> getTiles() {
+		return tiles;
+	}
+	public void setTiles(Array<Tile> tiles) {
+		this.tiles = tiles;
+	}
+	/** Our player controlled hero **/
+	Player player;
+
+	// Getters -----------
+	public Array<Tile> getBlocks() {
+		return tiles;
+	}
+	public Player getPlayer() {
+		return player;
+	}
+	// --------------------
+
+	public World() {
+		generateLevel();
+	}
+	public void update(float delta)
+	{
+		random  ++;
+		if (random > 3){
+			random = 0;
+		}
+		if( player.getPosition().x > tiles.size-6 ){
+			generateRandom(random);
+		}
+
+
+	}
+	private void generateRandom(int random){
+
+		switch(random)
+		{
+		case 1:
+			  tiles.add(new Tile(new Vector2(tiles.size, 0)));
+			  tiles.add(new Tile(new Vector2(tiles.size, 0))); 	
+			  tiles.add(new Tile(new Vector2(tiles.size+1, 0))); 	
+			  tiles.add(new Tile(new Vector2(tiles.size+2, 0))); 	
+			  tiles.add(new Tile(new Vector2(tiles.size+3, 0))); 	
+			  tiles.add(new Tile(new Vector2(tiles.size, 1))); 	
+
+			break;
+		case 2:
+			  tiles.add(new Tile(new Vector2(tiles.size, 1))); 	
+			  tiles.add(new Tile(new Vector2(tiles.size, 0))); 	
+			  tiles.add(new Tile(new Vector2(tiles.size, 1))); 	
+			  tiles.add(new Tile(new Vector2(tiles.size, 0))); 	
+			  tiles.add(new Tile(new Vector2(tiles.size, 1)));
+			  tiles.add(new Tile(new Vector2(tiles.size, 0))); 	
+
+
+			break;
+		case 3:
+			  tiles.add(new Tile(new Vector2(tiles.size, 1))); 	
+			  tiles.add(new Tile(new Vector2(tiles.size, 2))); 	
+			  tiles.add(new Tile(new Vector2(tiles.size, 2))); 	
+			  tiles.add(new Tile(new Vector2(tiles.size, 3))); 	
+			  tiles.add(new Tile(new Vector2(tiles.size, 3))); 	
+			  tiles.add(new Tile(new Vector2(tiles.size, 3))); 	
+
+			break;
+		}
+	}
+	private void generateLevel() {
+  
+		player = new Player(new Vector2(0, 2));
+		tiles.add(new Tile(new Vector2(tiles.size, 1)));
+		tiles.add(new Tile(new Vector2(tiles.size, 0)));
+		tiles.add(new Tile(new Vector2(tiles.size, 0)));
+		tiles.add(new Tile(new Vector2(tiles.size, 0)));
+		tiles.add(new Tile(new Vector2(tiles.size, 1)));
+		tiles.add(new Tile(new Vector2(tiles.size-1, 0)));
+
+
+
+ 			 			
+	}
+}

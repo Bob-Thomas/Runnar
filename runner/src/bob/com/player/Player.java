@@ -1,4 +1,6 @@
 package bob.com.player;
+import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 public class Player {
@@ -96,8 +98,14 @@ public class Player {
 		public void update(float delta) {
 			this.bounds.x = this.position.x;
 			this.bounds.y = this.position.y;
-			this.acceleration.x += 1f;
+			if(Gdx.app.getType() == ApplicationType.Android)
+			{
+			position.add(velocity.mul(0.01f));
+			}
+			else
+			{
 			position.add(velocity.mul(delta));
+			}
 		}
 
 		public float getStateTime() {

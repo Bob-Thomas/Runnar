@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename method &apos;bob.com.tiles.Tile.get_bounds()&apos; to &apos;get_top&apos;&#x0D;&#x0A;- Original project: &apos;runner&apos;&#x0D;&#x0A;- Original element: &apos;bob.com.tiles.Tile.get_bounds()&apos;&#x0D;&#x0A;- Renamed element: &apos;bob.com.tiles.Tile.get_top()&apos;&#x0D;&#x0A;- Update references to refactored element" delegate="false" deprecate="false" description="Rename method &apos;get_bounds&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.method" input="/src&lt;bob.com.tiles{Tile.java[Tile~get_bounds" name="get_top" references="true" stamp="1376321201617" version="1.0"/>
+</session>

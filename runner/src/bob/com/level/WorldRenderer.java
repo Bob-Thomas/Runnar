@@ -10,12 +10,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 
 public class WorldRenderer {
 
@@ -26,6 +28,8 @@ public class WorldRenderer {
 	private World world;
 	private OrthographicCamera cam;
 	private Texture playerTex,blockTex;
+	BitmapFont font;
+    CharSequence str = "012345679";
 	/** for debug rendering **/
 	ShapeRenderer debugRenderer = new ShapeRenderer();
 
@@ -36,6 +40,8 @@ public class WorldRenderer {
 	private int height;
 	private float ppuX;	// pixels per unit on the X axis
 	private float ppuY;	// pixels per unit on the Y axis
+	private Player player;
+	private int  score = 0;
 
 	public OrthographicCamera getCam() {
 		return cam;
@@ -62,25 +68,32 @@ public class WorldRenderer {
 	public WorldRenderer(World world, boolean debug) {
 		this.world = world;
 		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
-		this.cam.position.set(CAMERA_WIDTH / 2f, CAMERA_HEIGHT / 2f, 0);
-		this.cam.update();
+		this.cam.zoom = 40f;
 		this.spriteBatch = new SpriteBatch();
 		this.debug = debug;
-		loadTextures();
+		font = new BitmapFont(Gdx.files.internal("fonts/pixel.fnt"),
+		         Gdx.files.internal("fonts/pixel.png"), false);
+	    font.setColor(Color.WHITE);
+	    font.scale(0f);
+		player = world.getPlayer();
 	}
 
-	private void loadTextures() {
-//		bobTexture = new  Texture(Gdx.files.internal("images/bob_01.png"));
-		blockTex = new Texture(Gdx.files.internal("images/block.png"));
-	}
 
 	public void render(float delta) {
+			if(player.getState() != State.DYING){
+			score += 1;
+			
+			}
+		    this.cam.position.set(player.getPosition().x,100,0);
+			this.cam.update();
 			spriteBatch.begin();
 			spriteBatch.setProjectionMatrix(cam.combined);
-			spriteBatch.disableBlending();
+			//spriteBatch.enableBlending();
+			font.draw(spriteBatch, "SCORE: "+Integer.toString(score), player.getPosition().x-150,200);
 			for(Tile tile:world.getTiles()){
 				tile.Draw(this);
 			}
+			player.Draw(this);
 			spriteBatch.end();
 			if(debug){
 				drawDebug();
@@ -97,13 +110,22 @@ public class WorldRenderer {
 		// render blocks
 		debugRenderer.setProjectionMatrix(cam.combined);
 		debugRenderer.begin(ShapeType.Line);
+		for(Tile tile: world.getTiles()){
+		Rectangle rect = tile.get_box();
+		Rectangle rect2 = tile.get_top();
+		Rectangle rect3 = tile.get_rightSide();
+//		debugRenderer.setColor(new Color(255, 0, 0, 1));
+//		debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+//		debugRenderer.setColor(new Color(0, 0, 255, 1));
+//		debugRenderer.rect(rect2.x, rect2.y, rect2.width, rect2.height);
+		debugRenderer.setColor(new Color(0, 255, 0, 1));
+		debugRenderer.rect(rect3.x, rect3.y, rect3.width, rect3.height);
+		}
 //		z
 		// render Bob
-
-		Player bob = world.getPlayer();
-		Rectangle rect = bob.getBounds();
+		Rectangle rect = player.getBounds();
 		debugRenderer.setColor(new Color(0, 1, 0, 1));
-		debugRenderer.rect(rect.x, rect.y, 0.5f, 0.5f);
+		debugRenderer.rect(rect.x, rect.y, Player.SIZE, Player.SIZE);
 		debugRenderer.end();
 	}
 }

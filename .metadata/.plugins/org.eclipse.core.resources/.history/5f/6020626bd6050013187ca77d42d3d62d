@@ -1,0 +1,48 @@
+package bob.com.tiles;
+import bob.com.level.WorldRenderer;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+public class Tile {
+	
+	public static final float SIZE = 1f;
+	private Texture texture;
+	Vector2 	position;
+	Rectangle 	rectangle;
+	
+	
+
+	public Vector2 getPosition() {
+		return position;
+	}
+
+	public void setPosition(Vector2 position) {
+		this.position = position;
+	}
+
+
+	public Texture get_Tex(){
+		return this.texture;
+	}
+	public Rectangle get_rect(){
+		return this.rectangle;
+	}
+    public void update(float delta){
+    	this.rectangle.x = this.position.x;
+    	this.rectangle.y = this.position.y;
+    }
+	public Tile(Vector2 pos) {
+		this.texture = new Texture("images/block.png");
+		this.position = pos;
+		this.rectangle = new Rectangle(this.position.x,this.position.y-1,1,1);
+
+	}
+	public void Draw(WorldRenderer render){
+		render.getBatch().draw(this.texture,rectangle.x,rectangle.y, Tile.SIZE, Tile.SIZE);
+
+	}
+
+}

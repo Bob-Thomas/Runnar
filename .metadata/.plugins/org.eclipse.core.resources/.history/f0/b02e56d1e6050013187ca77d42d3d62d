@@ -1,0 +1,21 @@
+package bob.com.runner;
+
+import bob.com.screens.GameScreen;
+import bob.com.screens.StartScreen;
+
+import com.badlogic.gdx.Game;
+
+public class Runner extends Game {
+	private StartScreen splash;
+	private GameScreen play;
+	@Override
+	public void create() {
+		this.splash = new StartScreen(this);
+		this.play = new GameScreen();
+		setScreen(new StartScreen(this	));
+	}
+	@Override
+	public void render(){
+		super.render();
+	}
+}

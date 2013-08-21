@@ -1,6 +1,13 @@
 package bob.com.player;
+import bob.com.level.WorldRenderer;
+import bob.com.tiles.Tile;
+
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 public class Player {
@@ -10,15 +17,27 @@ public class Player {
 		}
 
 		private float speed = 1f;	// unit per second
-		private float jump_velocity = 1f;
-	    public static final float SIZE = 0.5f; // half a unit
+		private float jump_velocity = 8;
+	    public static final float SIZE = 16f; // half a unit
 		private Vector2 position = new Vector2();
 		private Vector2 acceleration = new Vector2();
 		private Vector2 velocity = new Vector2();
 		private Rectangle bounds = new Rectangle();
-		private State state = State.IDLE;
+		private State state = State.WALKING;
 		private boolean	facingLeft = true;
 		private float	stateTime = 0;
+		private AtlasRegion texture;
+		private TextureRegion[]  regions =  new TextureRegion[6];
+		private int frame = 1;
+		private float timer;
+		private TextureAtlas atlas;
+		public AtlasRegion getTexture() {
+			return texture;
+		}
+
+		public void setTexture(AtlasRegion texture) {
+			this.texture = texture;
+		}
 
 		public float getSpeed() {
 			return speed;
@@ -86,26 +105,50 @@ public class Player {
 		}
 
 		public Player(Vector2 position) {
+			atlas = new TextureAtlas("images/textures/textures.atlas");
 			this.position = position;
 			this.bounds.setHeight(SIZE);
 			this.bounds.setWidth(SIZE);
 			this.bounds.x = position.x;
 			this.bounds.y = position.y;
+			texture = atlas.findRegion("runningsprite");
+			regions[0] = new TextureRegion(texture, 0,0,44,44);
+			regions[1] = new TextureRegion(texture, 44, 0,44,44);
+			regions[2] = new TextureRegion(texture, 88,0,44,44);
+			regions[3] = new TextureRegion(texture, 132,0,44,44);
+			regions[4] = new TextureRegion(texture, 176,0,44,44);
+			regions[5] = new TextureRegion(texture, 220,0,44,44);			
 
 		}
 		
 
 		public void update(float delta) {
+			if(state == State.DYING){
+				frame = 5;
+			}
+			if(state == State.JUMPING){
+				frame = 0;
+			}
+			if(state == State.WALKING){
+			timer += Gdx.graphics.getDeltaTime();
+			if(timer > 0.08){
+				timer = 0;
+				frame ++;
+			}
+			if(frame > 4){
+				frame = 0;
+			}
+			}
 			this.bounds.x = this.position.x;
 			this.bounds.y = this.position.y;
-			if(Gdx.app.getType() == ApplicationType.Android)
-			{
-			position.add(velocity.mul(0.01f));
+			this.position.x += this.velocity.x;
+			this.position.y = this.position.y  + this.velocity.y;
+			atlas.findRegion("runningsprite").setRegion(this.regions[frame]);
+
 			}
-			else
-			{
-			position.add(velocity.mul(delta));
-			}
+		public void Draw(WorldRenderer render){
+			render.getBatch().draw(atlas.findRegion("runningsprite"),bounds.x,bounds.y, Player.SIZE, Player.SIZE);
+
 		}
 
 		public float getStateTime() {

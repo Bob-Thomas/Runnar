@@ -1,0 +1,78 @@
+package bob.com.screens;
+
+import bob.com.player.Player;
+import bob.com.runner.Runner;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class StartScreen implements  Screen {
+	private SpriteBatch batch;
+	private Texture splash;
+	private Runner runner;
+	private float timer;
+	public StartScreen(Runner runner){
+		this.runner = runner;
+	}
+	@Override
+	public void render(float delta) {
+		handleInput();
+		batch.begin();
+		batch.draw(this.splash,0,0, splash.getWidth(), splash.getHeight());
+		batch.end();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void show() {
+
+		splash = new Texture("data/splash.png");
+		runner = new Runner();
+		batch = new SpriteBatch();
+		
+	}
+
+	@Override
+	public void hide() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dispose() {
+		splash.dispose();
+		
+	}
+	 private void handleInput()
+	    {
+	        if(Gdx.input.justTouched())
+	        {
+	            runner.setScreen(new GameScreen(runner));
+	        }
+	    }
+
+
+
+}

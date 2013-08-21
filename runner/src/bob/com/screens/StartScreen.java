@@ -1,20 +1,34 @@
 package bob.com.screens;
 
+import bob.com.player.Player;
 import bob.com.runner.Runner;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class StartScreen implements Screen, InputProcessor {
+public class StartScreen implements  Screen {
 	private SpriteBatch batch;
-	private Texture splash = new Texture("/data/splash.png");
-	Runner runner = new Runner();
+	private Texture splash;
+	private Runner game;
+	private float timer;
+	public StartScreen(Runner game){
+		this.game = game;
+
+	}
 	@Override
 	public void render(float delta) {
-		// TODO Auto-generated method stub
+		handleInput();
 		
+		batch.begin();
+		batch.draw(this.splash,0,0, splash.getWidth(), splash.getHeight());
+		batch.end();	
 	}
 
 	@Override
@@ -25,7 +39,9 @@ public class StartScreen implements Screen, InputProcessor {
 
 	@Override
 	public void show() {
-		// TODO Auto-generated method stub
+
+		splash = new Texture("data/splash.png");
+		batch = new SpriteBatch();
 		
 	}
 
@@ -49,55 +65,17 @@ public class StartScreen implements Screen, InputProcessor {
 
 	@Override
 	public void dispose() {
-		// TODO Auto-generated method stub
 		
 	}
+	 private void handleInput()
+	    {
+	        if(Gdx.input.justTouched())
+	        {
+	        	Gdx.app.log("ouch", "you hit me ");
+	            game.setScreen(this.game.get_play());
+	        }
+	    }
 
-	@Override
-	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 }

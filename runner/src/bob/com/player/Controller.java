@@ -1,13 +1,18 @@
 package bob.com.player;
 
+import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 import bob.com.level.World;
 import bob.com.player.Player.State;
+import bob.com.runner.Runner;
+import bob.com.screens.GameOverScreen;
 import bob.com.tiles.Tile;
 
 public class Controller {
@@ -19,19 +24,21 @@ public class Controller {
 	private World 	world;
 	private Player 	player;
 	private float jumptime;
+	private float deathTime;
 	static Map<Keys, Boolean> keys = new HashMap<Controller.Keys, Boolean>();
-	private static final long LONG_JUMP_PRESS 	= 100l;
-	private static  float ACCELERATION 	= 1;
-	private static final float GRAVITY 			= -250f;
-	private static final float MAX_JUMP_SPEED	= 15f;
-	private static final float DAMP 			= 0.99f;
-	private static final float MAX_VEL 			= 100f;
+	private  float jumpTime 	= 0f;
+	private static float accel 	= 0;
+	private  float grav = -0.5f;
+	private static final float MAX_JUMP_SPEED	= 1f;
+	private static final float DAMP 			= 0.90f;
+	private static final float MAX_VEL 			= 2f;
 	
 	// these are temporary
 	private static final float WIDTH = 10f;
 	private long	jumpPressedTime;
 	private boolean jumpingPressed;
 	private boolean grounded = false;
+	private Runner game;	
 	static {
 		keys.put(Keys.LEFT, false);
 		keys.put(Keys.RIGHT, false);
@@ -39,8 +46,9 @@ public class Controller {
 		keys.put(Keys.FIRE, false);
 	};
 
-	public Controller(World world) {
+	public Controller(World world,Runner game) {
 		this.world = world;
+		this.game = game;
 		this.player = world.getPlayer();
 	}
 
@@ -82,76 +90,61 @@ public class Controller {
 	public void update(float delta) {
 		processInput();
 		player.update(delta);
-		if(!UpCollision()){
-		player.getAcceleration().y = GRAVITY;
-		Gdx.app.log("hoi", "faggots ik raak niets");
-
+		player.getVelocity().x += 1f;
+		if(UpCollision() && player.getState() != State.DYING){
+			player.getVelocity().y  = 0;
+			player.setState(State.WALKING);
 		}
 		else
 		{
-			player.getAcceleration().y = 0;
+			player.getVelocity().y += grav;
 		}
-		player.getAcceleration().mul(delta);
-		player.getVelocity().x += 0.01f;
-		player.getVelocity().add(2, player.getAcceleration().y);
-		if (player.getAcceleration().x == 0) player.getVelocity().x *= DAMP;
-		
-		if (player.getVelocity().x > MAX_VEL) {
+		if(player.getVelocity().x > MAX_VEL){
 			player.getVelocity().x = MAX_VEL;
 		}
-		if (player.getVelocity().x < -MAX_VEL) {
-			player.getVelocity().x = -MAX_VEL;
+		if(player.getVelocity().y < -6){
+			player.getVelocity().y = -6;
 		}
-		if(UpCollision()){
-			player.getVelocity().add(player.getAcceleration().x, player.getAcceleration().y);
-			player.getPosition().x = player.getPosition().x;
-			player.getPosition().y =player.getPosition().y;
-			player.getAcceleration().y += 1	;
-			player.setState(State.IDLE);
-			Gdx.app.log("hoi", "walking"
-					);
-
+		if(this.player.getState() == State.JUMPING){
+			
 		}
 		if(RightCollision()){
-			player.getVelocity().set(0, 0);
-			Gdx.app.log("hoi", "side hit");
-
-
+			player.setState(State.DYING);
 		}
-
-//	if (player.getPosition().y < 1) {
-//			player.getPosition().y = 1f;
-//			player.setPosition(player.getPosition());
-//			if (player.getState().equals(State.JUMPING)) {
-//				player.setState(State.IDLE);
-//			}
-//		 }
+		if(player.getState() == State.DYING){
+			player.getVelocity().x = 0;
+			if(deathTime > 0 && deathTime < 0.5){
+			player.getVelocity().y = 2
+					;
+			}
+			else
+			{player.getVelocity().y += grav
+			;
+			
+			}
+			
+			deathTime += delta;
+			if(deathTime > 3){
+				this.game.setScreen(new GameOverScreen(game));
+				deathTime  = 0;
+			}
+		}
+		Gdx.app.log("speed :",Float.toString(player.getVelocity().y) + ": "+player.getState().toString());
 	}
 
 	private void processInput() {
-		if (keys.get(Keys.JUMP)) {
-			grounded = false;
-			if (!player.getState().equals(State.JUMPING)) {
-				jumpingPressed = true;
-				jumpPressedTime = System.currentTimeMillis();
-				player.setState(State.JUMPING);
-				player.getVelocity().y = MAX_JUMP_SPEED; 
-			} else {
-				if (jumpingPressed && ((System.currentTimeMillis() - jumpPressedTime) >= LONG_JUMP_PRESS)) {
-					jumpingPressed = false;
-				} else {
-					if (jumpingPressed) {
-						player.getVelocity().y = MAX_JUMP_SPEED;
-					}
-				}
-			}
+		if (keys.get(Keys.JUMP) && UpCollision() && player.getState() != State.DYING
+				) {
+			player.getVelocity().y = player.getJump_velocity();
+			player.setState(State.JUMPING);
 		}
 	}
+
 	private  boolean UpCollision(){
 		for(Tile tile:world.getTiles()){
 			Rectangle rect = new Rectangle(tile.getPosition().x,tile.getPosition().y,tile.get_top().width,tile.get_top().height);
 			if(player.getBounds().overlaps(rect)){	
-				if(player.getPosition().y-1 < rect.y){
+				if(player.getPosition().y-32 < rect.y){
 
 					return true;
 				}
@@ -164,8 +157,9 @@ public class Controller {
 	}
 	private  boolean RightCollision(){
 		for(Tile tile:world.getTiles()){
-			Rectangle rect = new Rectangle(tile.getPosition().x,tile.getPosition().y-1,tile.get_rightSide().width,tile.get_rightSide().height);
-			if(player.getBounds().overlaps(rect)){	
+			Rectangle rect = new Rectangle(tile.get_rightSide().x,tile.get_rightSide().y,tile.get_rightSide().width,tile.get_rightSide().height);
+			if(player.getBounds().overlaps(rect) && player.getState() != State.DYING
+					){	
 				if(player.getPosition().x < rect.x){
 
 					return true;
@@ -177,5 +171,6 @@ public class Controller {
 		return false;
 
 	}
+	
 }
 						

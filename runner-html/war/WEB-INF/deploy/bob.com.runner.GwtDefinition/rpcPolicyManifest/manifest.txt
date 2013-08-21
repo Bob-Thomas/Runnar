@@ -1,0 +1,2 @@
+# Module bob.com.runner.GwtDefinition
+# RPC service class, partial path of RPC policy file

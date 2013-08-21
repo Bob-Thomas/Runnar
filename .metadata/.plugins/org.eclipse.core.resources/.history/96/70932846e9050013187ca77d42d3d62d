@@ -1,0 +1,35 @@
+package bob.com.runner;
+
+import bob.com.screens.GameScreen;
+import bob.com.screens.StartScreen;
+
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class Runner extends Game {
+	private StartScreen splash;
+	private GameScreen play;
+	private SpriteBatch batch;
+	public SpriteBatch getBatch() {
+		return batch;
+	}
+	public void setBatch(SpriteBatch batch) {
+		this.batch = batch;
+	}
+	public GameScreen get_play(){
+		return play;
+	}
+	@Override
+	public void create() {
+		this.splash = new StartScreen(this);
+		this.play = new GameScreen(this);
+		this.batch = new SpriteBatch();
+		this.setBatch(this.batch);
+		this.setScreen(player);
+	}
+	@Override
+	public void render(){
+er.render();
+	}
+}

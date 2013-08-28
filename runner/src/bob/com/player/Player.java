@@ -1,6 +1,7 @@
 package bob.com.player;
+import bob.com.atlas.TextureHelper;
 import bob.com.level.WorldRenderer;
-import bob.com.tiles.Tile;
+import bob.com.objects.Tile;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
@@ -13,7 +14,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Player {
 
 		public enum State {
-			IDLE, WALKING, JUMPING, DYING
+			IDLE, WALKING, JUMPING, DYING,FALLING
 		}
 
 		private float speed = 1f;	// unit per second
@@ -24,20 +25,12 @@ public class Player {
 		private Vector2 velocity = new Vector2();
 		private Rectangle bounds = new Rectangle();
 		private State state = State.WALKING;
-		private boolean	facingLeft = true;
 		private float	stateTime = 0;
 		private AtlasRegion texture;
 		private TextureRegion[]  regions =  new TextureRegion[6];
 		private int frame = 1;
 		private float timer;
-		private TextureAtlas atlas;
-		public AtlasRegion getTexture() {
-			return texture;
-		}
-
-		public void setTexture(AtlasRegion texture) {
-			this.texture = texture;
-		}
+		private TextureHelper helper;
 
 		public float getSpeed() {
 			return speed;
@@ -96,22 +89,16 @@ public class Player {
 			this.state = state;
 		}
 
-		public boolean isFacingLeft() {
-			return facingLeft;
-		}
 
-		public void setFacingLeft(boolean facingLeft) {
-			this.facingLeft = facingLeft;
-		}
 
 		public Player(Vector2 position) {
-			atlas = new TextureAtlas("images/textures/textures.atlas");
+			this.helper = new TextureHelper();
 			this.position = position;
 			this.bounds.setHeight(SIZE);
 			this.bounds.setWidth(SIZE);
 			this.bounds.x = position.x;
 			this.bounds.y = position.y;
-			texture = atlas.findRegion("runningsprite");
+			texture = this.helper.getPlayer();
 			regions[0] = new TextureRegion(texture, 0,0,44,44);
 			regions[1] = new TextureRegion(texture, 44, 0,44,44);
 			regions[2] = new TextureRegion(texture, 88,0,44,44);
@@ -126,7 +113,7 @@ public class Player {
 			if(state == State.DYING){
 				frame = 5;
 			}
-			if(state == State.JUMPING){
+			if(state == State.JUMPING || state == State.FALLING){
 				frame = 0;
 			}
 			if(state == State.WALKING){
@@ -143,11 +130,11 @@ public class Player {
 			this.bounds.y = this.position.y;
 			this.position.x += this.velocity.x;
 			this.position.y = this.position.y  + this.velocity.y;
-			atlas.findRegion("runningsprite").setRegion(this.regions[frame]);
+			this.helper.getPlayer().setRegion(this.regions[frame]);
 
 			}
 		public void Draw(WorldRenderer render){
-			render.getBatch().draw(atlas.findRegion("runningsprite"),bounds.x,bounds.y, Player.SIZE, Player.SIZE);
+			render.getBatch().draw(this.helper.getPlayer(),bounds.x,bounds.y, Player.SIZE, Player.SIZE);
 
 		}
 

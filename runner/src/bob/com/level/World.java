@@ -1,52 +1,92 @@
 package bob.com.level;
 
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Random;
 
 import sun.rmi.runtime.Log;
 import bob.com.player.Player;
-import bob.com.tiles.Tile;
+import bob.com.background.Background;
+import bob.com.objects.Coin;
+import bob.com.objects.Tile;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class World {
-	private int random = 0;
-	private Random rng = new Random();
+	private int amount = 0;
+	private Random random = new Random();
+	private int randomnumber;
+	private Background background;
+	private Rectangle delRect;
 	/** The blocks making up the world **/
-	Array<Tile> tiles = new Array<Tile>();
-	
-	public Array<Tile> getTiles() {
+	ArrayList<Tile> tiles = new ArrayList<Tile>();
+	ArrayList<Coin> coins = new ArrayList<Coin>();
+	public ArrayList<Coin> getCoins() {
+		return coins;
+	}
+	public void setCoins(ArrayList<Coin> coins) {
+		this.coins = coins;
+	}
+	public ArrayList<Tile> getTiles() {
 		return tiles;
 	}
-	public void setTiles(Array<Tile> tiles) {
+	public void setTiles(ArrayList<Tile> tiles) {
 		this.tiles = tiles;
+	}
+	public Background getBackground(){
+		return background;
 	}
 	/** Our player controlled hero **/
 	Player player;
 
 	// Getters -----------
-	public Array<Tile> getBlocks() {
-		return tiles;
-	}
 	public Player getPlayer() {
 		return player;
 	}
 	// --------------------
 
 	public World() {
+		player = new Player(new Vector2(0, 2));
+		this.delRect = new Rectangle(10,500,-200,0);
+		this.background = new Background(new Vector2(-500,-100),new Vector2(-500,-100),new Vector2(-1000,-100));
 		generateLevel();
 	}
-	@SuppressWarnings("unchecked")
 	public void update(float delta)
 	{
-		random = rng.nextInt(3 - 0 + 1) + 0;
-		if( player.getPosition().x > (tiles.size-6)*32 ){
-			generateRandom(random);
+		this.delRect.x = this.player.getPosition().x-200;
+		if(this.background.getPosition().x+1000 < this.player.getPosition().x){
+			this.background.getPosition().x = this.player.getPosition().x-500;
 		}
-		Gdx.app.log("position",Integer.toString(tiles.size));
+		if(this.background.getPosition2().x+1000  < this.player.getPosition().x){
+			this.background.getPosition2().x = this.player.getPosition().x-500;
+		}
+		if(this.background.getPosition3().x+1000  < this.player.getPosition().x){
+			this.background.getPosition3().x = this.player.getPosition().x-500;
+		}
+		randomnumber = random.nextInt((3 - 0) + 1) + 0;
+		
+		if( player.getPosition().x > (amount-6)*32 ){
+			generateRandom(randomnumber);
+		}
+		for(Tile t:tiles){
+			if(t.get_box().overlaps(delRect)){
+				tiles.remove(t);
+				break;
+			}
+		}
+		for(Coin c:coins){
+			if(c.getBounds().overlaps(delRect)){
+				coins.remove(c);
+				break;
+			}
+		}
+		for(Coin c:coins){
+			c.Update(delta);
+		}
+		
 
 	}
 	private void generateRandom(int random){
@@ -54,47 +94,58 @@ public class World {
 		switch(random)
 		{
 		case 1:
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 0*Tile.SIZE),random));
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 0*Tile.SIZE),random)); 	
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 0*Tile.SIZE),random)); 	
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 0*Tile.SIZE),random)); 	
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 0*Tile.SIZE),random)); 	
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 1*Tile.SIZE),random)); 	
+			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random);
+			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random); 	
+			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random); 	
+			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random); 	
+			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random);
+			  AddCoin(amount*32,1*32);
+			  AddBlock(amount*Tile.SIZE, 1*Tile.SIZE,random); 	
 
 			break;
 		case 2:
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 1*Tile.SIZE),random)); 	
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 0*Tile.SIZE),random)); 	
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 1*Tile.SIZE),random)); 	
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 0*Tile.SIZE),random)); 	
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 1*Tile.SIZE),random));
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 0*Tile.SIZE),random)); 	
+			  AddBlock(amount*Tile.SIZE, 1*Tile.SIZE,random); 	
+			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random); 	
+			  AddBlock(amount*Tile.SIZE, 1*Tile.SIZE,random); 	
+			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random); 	
+			  AddBlock(amount*Tile.SIZE, 1*Tile.SIZE,random);
+			  AddCoin(amount*32,2*32);
+			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random); 	
 
 
 			break;
 		case 3:
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 1*Tile.SIZE),random)); 	
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 2*Tile.SIZE),random)); 	
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 2*Tile.SIZE),random)); 	
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 3*Tile.SIZE),random)); 	
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 3*Tile.SIZE),random)); 	
-			  tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 3*Tile.SIZE),random)); 	
+			  AddBlock(amount*Tile.SIZE, 1*Tile.SIZE,random); 	
+			  AddBlock(amount*Tile.SIZE, 2*Tile.SIZE,random); 	
+			  AddBlock(amount*Tile.SIZE, 2*Tile.SIZE,random); 	
+			  AddBlock(amount*Tile.SIZE, 3*Tile.SIZE,random); 	
+			  AddBlock(amount*Tile.SIZE, 3*Tile.SIZE,random); 	
+			  AddCoin(amount*32,4*32);
+			  AddBlock(amount*Tile.SIZE, 3*Tile.SIZE,random);
+
 
 			break;
 		}
 	}
 	private void generateLevel() {
   
-		player = new Player(new Vector2(0, 2*Tile.SIZE));
-		tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 0*Tile.SIZE),3));
-		tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 0*Tile.SIZE),3));
-		tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 0*Tile.SIZE),3));
-		tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 0*Tile.SIZE),3));
-		tiles.add(new Tile(new Vector2(tiles.size*Tile.SIZE, 0*Tile.SIZE),3));
-		tiles.add(new Tile(new Vector2(tiles.size-1*Tile.SIZE, 0*Tile.SIZE),3));
+		AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,1);
+		AddCoin(amount*32,0*32);
+		AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,1);
+		AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,1);
+		AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,1);
+		AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,1);
+		AddBlock(amount*Tile.SIZE,1*Tile.SIZE,1);
 
 
-
+	
  			 			
+	}
+	private void AddBlock(float x,float y,int i){
+		amount +=1 ;
+		tiles.add(new Tile(new Vector2(x,y),i));
+	}
+	private void AddCoin(float x,float y){
+		coins.add(new Coin(new Vector2(x,y)));
 	}
 }

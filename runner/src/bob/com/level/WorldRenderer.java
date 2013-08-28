@@ -1,9 +1,11 @@
 package bob.com.level;
 
 
+import bob.com.background.Background;
+import bob.com.objects.Coin;
+import bob.com.objects.Tile;
 import bob.com.player.Player;
 import bob.com.player.Player.State;
-import bob.com.tiles.Tile;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -17,17 +19,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class WorldRenderer {
 
 	private static final float CAMERA_WIDTH = 10f;
 	private static final float CAMERA_HEIGHT =7f;
-	private static final float RUNNING_FRAME_DURATION = 0.06f;
     private SpriteBatch spriteBatch;
 	private World world;
 	private OrthographicCamera cam;
-	private Texture playerTex,blockTex;
 	BitmapFont font;
     CharSequence str = "012345679";
 	/** for debug rendering **/
@@ -38,8 +39,6 @@ public class WorldRenderer {
 	private boolean debug = false;
 	private int width;
 	private int height;
-	private float ppuX;	// pixels per unit on the X axis
-	private float ppuY;	// pixels per unit on the Y axis
 	private Player player;
 	private int  score = 0;
 
@@ -55,8 +54,7 @@ public class WorldRenderer {
 	public void setSize (int w, int h) {
 		this.width = w;
 		this.height = h;
-		ppuX = (float)width / CAMERA_WIDTH;
-		ppuY = (float)height / CAMERA_HEIGHT;
+
 	}
 	public boolean isDebug() {
 		return debug;
@@ -80,19 +78,20 @@ public class WorldRenderer {
 
 
 	public void render(float delta) {
-			if(player.getState() != State.DYING){
-			score += 1;
-			
-			}
+			Background background = world.getBackground();
+		    score = Gdx.graphics.getFramesPerSecond();
 		    this.cam.position.set(player.getPosition().x,100,0);
 			this.cam.update();
 			spriteBatch.begin();
 			spriteBatch.setProjectionMatrix(cam.combined);
-			//spriteBatch.enableBlending();
-			font.draw(spriteBatch, "SCORE: "+Integer.toString(score), player.getPosition().x-150,200);
+			background.Draw(this);
 			for(Tile tile:world.getTiles()){
 				tile.Draw(this);
 			}
+			for(Coin coin:world.getCoins()){
+				coin.Draw(this);
+			}
+			font.draw(spriteBatch, "SCORE: "+Integer.toString(score), player.getPosition().x-150,200);
 			player.Draw(this);
 			spriteBatch.end();
 			if(debug){
@@ -114,12 +113,12 @@ public class WorldRenderer {
 		Rectangle rect = tile.get_box();
 		Rectangle rect2 = tile.get_top();
 		Rectangle rect3 = tile.get_rightSide();
-//		debugRenderer.setColor(new Color(255, 0, 0, 1));
-//		debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
+		debugRenderer.setColor(new Color(255, 0, 0, 1));
+		debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
 //		debugRenderer.setColor(new Color(0, 0, 255, 1));
 //		debugRenderer.rect(rect2.x, rect2.y, rect2.width, rect2.height);
 		debugRenderer.setColor(new Color(0, 255, 0, 1));
-		debugRenderer.rect(rect3.x, rect3.y, rect3.width, rect3.height);
+		debugRenderer.rect(rect.x, rect3.y, rect3.width, rect3.height);
 		}
 //		z
 		// render Bob

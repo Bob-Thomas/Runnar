@@ -32,7 +32,7 @@ public class Runner extends Game {
 		this.batch = new SpriteBatch();
 		this.setBatch(this.batch);
 		this.setScreen(splash);
-
+		Gdx.graphics.setVSync(true);
 	}
 	public void dispose() {
 		super.dispose();

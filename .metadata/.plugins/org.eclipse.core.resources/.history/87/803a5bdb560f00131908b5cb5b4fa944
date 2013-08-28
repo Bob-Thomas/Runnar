@@ -1,0 +1,32 @@
+package bob.com.background;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.math.Vector2;
+
+import bob.com.atlas.TextureHelper;
+import bob.com.level.WorldRenderer;
+import bob.com.player.Player;
+import bob.com.runner.Runner;
+import bob.com.tiles.Tile;
+
+public class Background {
+	private TextureHelper helper;
+	private AtlasRegion texture;
+	private Vector2 position;
+	
+	public Vector2 getPosition() {
+		return position;
+	}
+	public void setPosition(Vector2 position) {
+		this.position = position;
+	}
+	public Background(Vector2 position){
+		this.helper = new TextureHelper();
+		this.texture = helper.getGameover();
+		
+	}
+	public void Draw(WorldRenderer render){
+		render.getBatch().draw(texture,position.x,position.y, Tile.SIZE, Tile.SIZE);
+	}
+}

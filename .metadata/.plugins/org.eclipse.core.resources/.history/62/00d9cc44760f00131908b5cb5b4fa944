@@ -1,0 +1,39 @@
+package bob.com.atlas;
+
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+public class TextureHelper {
+	private TextureAtlas atlas;
+	private AtlasRegion blocks,player,splash,gameover,background;
+	
+	public AtlasRegion getBlocks() {
+		return blocks;
+	}
+
+	public AtlasRegion getPlayer() {
+		return player;
+	}
+
+	public AtlasRegion getSplash() {
+		return splash;
+	}
+
+	public AtlasRegion getGameover() {
+		return gameover;
+	}
+	public AtlasRegion getBackground() {
+		return background;
+	}
+
+	public TextureHelper(){
+		this.atlas = new TextureAtlas("images/textures/textures.atlas");
+		this.blocks = this.atlas.findRegion("blocks");
+		this.player = this.atlas.findRegion("player");
+		this.splash = this.atlas.findRegion("splash");
+		this.gameover = this.atlas.findRegion("gameover");
+		this.background = this.atlas.findRegion("city");
+	}
+}

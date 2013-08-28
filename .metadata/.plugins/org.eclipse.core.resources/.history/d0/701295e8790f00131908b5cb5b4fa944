@@ -1,0 +1,43 @@
+package bob.com.objects;
+
+import bob.com.atlas.TextureHelper;
+import bob.com.level.WorldRenderer;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+
+public class Coins {
+	private AtlasRegion texture;
+	private TextureHelper helper;
+	private TextureRegion regions[];
+	private Vector2 position;
+	private Rectangle bounds;
+	private float timer;
+	private int frame;
+	
+	public Coins(Vector2 position){
+		this.helper = new TextureHelper();
+		this.texture = this.helper.getCoins();
+		this.position = position;
+		this.bounds = new Rectangle(position.x,position.y,32,32);
+		
+	}
+	public void Update(float delta){
+		timer += Gdx.graphics.getDeltaTime();
+		if(timer > 0.08){
+			timer = 0;
+			frame ++;
+		}
+		if(frame > 4){
+			frame = 0;
+		}
+		this.helper.getCoins().setRegion(this.regions[frame]);
+
+	}
+	public void Draw(WorldRenderer render){
+		render.getBatch().draw(texture, position.x, position.y, 0, 0, 32, 32, 0, 0, 0);
+	}
+}

@@ -1,5 +1,6 @@
 package bob.com.screens;
 
+import bob.com.atlas.TextureHelper;
 import bob.com.player.Player;
 import bob.com.runner.Runner;
 
@@ -12,22 +13,25 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 
 public class StartScreen implements  Screen {
+	private TextureHelper helper;
 	private SpriteBatch batch;
-	private Texture splash;
+	private AtlasRegion splash;
 	private Runner game;
 	private float timer;
+	
 	public StartScreen(Runner game){
 		this.game = game;
-
+		this.helper = new TextureHelper();
 	}
 	@Override
 	public void render(float delta) {
 		handleInput();
 		
 		batch.begin();
-		batch.draw(this.splash,0,0, splash.getWidth(), splash.getHeight());
+		batch.draw(this.splash,0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch.end();	
 	}
 
@@ -40,7 +44,7 @@ public class StartScreen implements  Screen {
 	@Override
 	public void show() {
 
-		splash = new Texture("data/splash.png");
+		splash = this.helper.getSplash();
 		batch = new SpriteBatch();
 		
 	}

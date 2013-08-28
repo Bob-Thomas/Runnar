@@ -10,10 +10,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import bob.com.level.World;
+import bob.com.objects.Tile;
 import bob.com.player.Player.State;
 import bob.com.runner.Runner;
 import bob.com.screens.GameOverScreen;
-import bob.com.tiles.Tile;
 
 public class Controller {
 
@@ -97,6 +97,7 @@ public class Controller {
 		}
 		else
 		{
+			if(player.getState() != State.DYING){player.setState(State.FALLING);}
 			player.getVelocity().y += grav;
 		}
 		if(player.getVelocity().x > MAX_VEL){
@@ -109,6 +110,9 @@ public class Controller {
 			
 		}
 		if(RightCollision()){
+			player.setState(State.DYING);
+		}
+		if(player.getPosition().y < -50){
 			player.setState(State.DYING);
 		}
 		if(player.getState() == State.DYING){
@@ -129,7 +133,6 @@ public class Controller {
 				deathTime  = 0;
 			}
 		}
-		Gdx.app.log("speed :",Float.toString(player.getVelocity().y) + ": "+player.getState().toString());
 	}
 
 	private void processInput() {

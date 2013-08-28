@@ -1,0 +1,33 @@
+
+textures.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+gameover
+  rotate: false
+  xy: 1, 410
+  size: 512, 360
+  orig: 512, 360
+  offset: 0, 0
+  index: -1
+splash
+  rotate: false
+  xy: 1, 48
+  size: 512, 360
+  orig: 512, 360
+  offset: 0, 0
+  index: -1
+blocks
+  rotate: false
+  xy: 515, 708
+  size: 349, 62
+  orig: 349, 62
+  offset: 0, 0
+  index: -1
+player
+  rotate: false
+  xy: 1, 1
+  size: 247, 45
+  orig: 255, 47
+  offset: 0, 0
+  index: -1

@@ -2,9 +2,9 @@ package bob.com.screens;
 
 import bob.com.level.World;
 import bob.com.level.WorldRenderer;
+import bob.com.objects.Tile;
 import bob.com.player.Controller;
 import bob.com.runner.Runner;
-import bob.com.tiles.Tile;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -18,7 +18,6 @@ public class GameScreen  implements Screen, InputProcessor {
 	private WorldRenderer 	renderer;
 	private Controller	controller;
 	private Runner game;
-	private int width, height;
 	
 	public GameScreen(Runner game){
 		this.game = game;
@@ -34,7 +33,6 @@ public class GameScreen  implements Screen, InputProcessor {
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		world.update(delta);
 		controller.update(delta);

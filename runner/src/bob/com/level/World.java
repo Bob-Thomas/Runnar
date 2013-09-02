@@ -4,8 +4,10 @@ package bob.com.level;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 import sun.rmi.runtime.Log;
 import bob.com.player.Player;
+import bob.com.player.Score;
 import bob.com.background.Background;
 import bob.com.objects.Coin;
 import bob.com.objects.Tile;
@@ -22,7 +24,7 @@ public class World {
 	private Background background;
 	private Rectangle delRect;
 	/** The blocks making up the world **/
-	ArrayList<Tile> tiles = new ArrayList<Tile>();
+	private ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 	ArrayList<Coin> coins = new ArrayList<Coin>();
 	public ArrayList<Coin> getCoins() {
 		return coins;
@@ -30,11 +32,8 @@ public class World {
 	public void setCoins(ArrayList<Coin> coins) {
 		this.coins = coins;
 	}
-	public ArrayList<Tile> getTiles() {
-		return tiles;
-	}
-	public void setTiles(ArrayList<Tile> tiles) {
-		this.tiles = tiles;
+	public ArrayList<Chunk> getChunks() {
+		return chunks;
 	}
 	public Background getBackground(){
 		return background;
@@ -49,14 +48,14 @@ public class World {
 	// --------------------
 
 	public World() {
-		player = new Player(new Vector2(0, 2));
-		this.delRect = new Rectangle(10,500,-200,0);
+		player = new Player(new Vector2(0, 320));
+		this.delRect = new Rectangle(0,-100,10,500);
 		this.background = new Background(new Vector2(-500,-100),new Vector2(-500,-100),new Vector2(-1000,-100));
 		generateLevel();
 	}
 	public void update(float delta)
 	{
-		this.delRect.x = this.player.getPosition().x-200;
+		this.delRect.x = this.player.getPosition().x-10*32;
 		if(this.background.getPosition().x+1000 < this.player.getPosition().x){
 			this.background.getPosition().x = this.player.getPosition().x-500;
 		}
@@ -65,26 +64,33 @@ public class World {
 		}
 		if(this.background.getPosition3().x+1000  < this.player.getPosition().x){
 			this.background.getPosition3().x = this.player.getPosition().x-500;
-		}
-		randomnumber = random.nextInt((3 - 0) + 1) + 0;
+		}	
 		
-		if( player.getPosition().x > (amount-6)*32 ){
-			generateRandom(randomnumber);
+		if( player.getPosition().x > (amount-(32*10)) ){
+			randomnumber = random.nextInt((3 - 0) + 1) + 0;
+
+			 generateRandom(randomnumber);
 		}
-		for(Tile t:tiles){
-			if(t.get_box().overlaps(delRect)){
-				tiles.remove(t);
+		for(Chunk c:chunks){
+			if(c.getTiles().get(0).get_box().overlaps(delRect))
+			{
+				chunks.remove(c);
 				break;
 			}
+
 		}
-		for(Coin c:coins){
-			if(c.getBounds().overlaps(delRect)){
-				coins.remove(c);
-				break;
+		for(Chunk c:chunks){
+			for(Coin co:c.getCoins()){
+				if(co.getBounds().overlaps(delRect)){
+					c.getCoins().remove(co);
+					break;			
+				}
+				if(co.getBounds().overlaps(player.getBounds())){
+					c.getCoins().remove(co);
+					Score.setScore(Score.getScore() + 10);
+					break;
+				}
 			}
-		}
-		for(Coin c:coins){
-			c.Update(delta);
 		}
 		
 
@@ -94,58 +100,32 @@ public class World {
 		switch(random)
 		{
 		case 1:
-			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random);
-			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random); 	
-			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random); 	
-			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random); 	
-			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random);
-			  AddCoin(amount*32,1*32);
-			  AddBlock(amount*Tile.SIZE, 1*Tile.SIZE,random); 	
-
+			 AddChunk(amount,0,1,1,3);
 			break;
 		case 2:
-			  AddBlock(amount*Tile.SIZE, 1*Tile.SIZE,random); 	
-			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random); 	
-			  AddBlock(amount*Tile.SIZE, 1*Tile.SIZE,random); 	
-			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random); 	
-			  AddBlock(amount*Tile.SIZE, 1*Tile.SIZE,random);
-			  AddCoin(amount*32,2*32);
-			  AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,random); 	
-
-
+			 AddChunk(amount,0,1,2,1);
 			break;
 		case 3:
-			  AddBlock(amount*Tile.SIZE, 1*Tile.SIZE,random); 	
-			  AddBlock(amount*Tile.SIZE, 2*Tile.SIZE,random); 	
-			  AddBlock(amount*Tile.SIZE, 2*Tile.SIZE,random); 	
-			  AddBlock(amount*Tile.SIZE, 3*Tile.SIZE,random); 	
-			  AddBlock(amount*Tile.SIZE, 3*Tile.SIZE,random); 	
-			  AddCoin(amount*32,4*32);
-			  AddBlock(amount*Tile.SIZE, 3*Tile.SIZE,random);
-
-
+			 AddChunk(amount,0,1,2,2);
+			break;
+		default:
 			break;
 		}
+		 
 	}
 	private void generateLevel() {
-  
-		AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,1);
-		AddCoin(amount*32,0*32);
-		AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,1);
-		AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,1);
-		AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,1);
-		AddBlock(amount*Tile.SIZE, 0*Tile.SIZE,1);
-		AddBlock(amount*Tile.SIZE,1*Tile.SIZE,1);
+		 AddChunk(amount,0,10,1,1);
 
-
+		
 	
  			 			
 	}
-	private void AddBlock(float x,float y,int i){
-		amount +=1 ;
-		tiles.add(new Tile(new Vector2(x,y),i));
+	private void AddChunk(int x,int y,int w,int h,int i){
+		amount += w*32;
+		this.chunks.add(new Chunk(x, y, w, h,i));
 	}
-	private void AddCoin(float x,float y){
-		coins.add(new Coin(new Vector2(x,y)));
+	private void AddCoin(int x,int y){
+		this.coins.add(new Coin(new Vector2(x,y)));
 	}
+
 }

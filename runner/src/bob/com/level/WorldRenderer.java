@@ -6,6 +6,9 @@ import bob.com.objects.Coin;
 import bob.com.objects.Tile;
 import bob.com.player.Player;
 import bob.com.player.Player.State;
+import bob.com.player.Score;
+import bob.com.runner.Runner;
+import bob.com.screens.GameScreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -24,24 +27,17 @@ import com.badlogic.gdx.math.Vector3;
 
 public class WorldRenderer {
 
+	private Runner game;
 	private static final float CAMERA_WIDTH = 10f;
 	private static final float CAMERA_HEIGHT =7f;
     private SpriteBatch spriteBatch;
 	private World world;
+	private Score score;
 	private OrthographicCamera cam;
-	BitmapFont font;
-    CharSequence str = "012345679";
-	/** for debug rendering **/
+	private Background background;
 	ShapeRenderer debugRenderer = new ShapeRenderer();
-
-	/** Textures **/
-	
 	private boolean debug = false;
-	private int width;
-	private int height;
 	private Player player;
-	private int  score = 0;
-
 	public OrthographicCamera getCam() {
 		return cam;
 	}
@@ -49,11 +45,9 @@ public class WorldRenderer {
 		this.cam = cam;
 	}
 	public SpriteBatch getBatch(){
-		return spriteBatch;
+		return game.getBatch();
 	}
 	public void setSize (int w, int h) {
-		this.width = w;
-		this.height = h;
 
 	}
 	public boolean isDebug() {
@@ -63,37 +57,27 @@ public class WorldRenderer {
 		this.debug = debug;
 	}
 
-	public WorldRenderer(World world, boolean debug) {
+	public WorldRenderer(World world, boolean debug,Runner game) {
+		this.game = game;
 		this.world = world;
 		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
 		this.cam.zoom = 40f;
-		this.spriteBatch = new SpriteBatch();
 		this.debug = debug;
-		font = new BitmapFont(Gdx.files.internal("fonts/pixel.fnt"),
-		         Gdx.files.internal("fonts/pixel.png"), false);
-	    font.setColor(Color.WHITE);
-	    font.scale(0f);
+		this.score = new Score();
 		player = world.getPlayer();
+		background = world.getBackground();
 	}
 
 
 	public void render(float delta) {
-			Background background = world.getBackground();
-		    score = Gdx.graphics.getFramesPerSecond();
-		    this.cam.position.set(player.getPosition().x,100,0);
-			this.cam.update();
-			spriteBatch.begin();
-			spriteBatch.setProjectionMatrix(cam.combined);
+			this.game.getBatch().setProjectionMatrix(this.cam.combined);
+			this.game.getBatch().enableBlending();
 			background.Draw(this);
-			for(Tile tile:world.getTiles()){
-				tile.Draw(this);
+			score.Draw(this, player);
+			for(Chunk chunk : world.getChunks()){
+				chunk.render(this.game.getBatch());
 			}
-			for(Coin coin:world.getCoins()){
-				coin.Draw(this);
-			}
-			font.draw(spriteBatch, "SCORE: "+Integer.toString(score), player.getPosition().x-150,200);
-			player.Draw(this);
-			spriteBatch.end();
+			player.Draw(this.game.getBatch());
 			if(debug){
 				drawDebug();
 			}
@@ -101,30 +85,34 @@ public class WorldRenderer {
 			//drawDebug();
 	}
 
+	public void Update(float delta){
+		for(Chunk chunk : world.getChunks()){
+			chunk.Update(delta);
+		}
+		this.cam.update();
+	    this.cam.position.set(player.getPosition().x,100,0);
 
+		
+	}
 
 
 		
 	private void drawDebug() {
-		// render blocks
-		debugRenderer.setProjectionMatrix(cam.combined);
-		debugRenderer.begin(ShapeType.Line);
-		for(Tile tile: world.getTiles()){
-		Rectangle rect = tile.get_box();
-		Rectangle rect2 = tile.get_top();
-		Rectangle rect3 = tile.get_rightSide();
-		debugRenderer.setColor(new Color(255, 0, 0, 1));
-		debugRenderer.rect(rect.x, rect.y, rect.width, rect.height);
-//		debugRenderer.setColor(new Color(0, 0, 255, 1));
-//		debugRenderer.rect(rect2.x, rect2.y, rect2.width, rect2.height);
-		debugRenderer.setColor(new Color(0, 255, 0, 1));
-		debugRenderer.rect(rect.x, rect3.y, rect3.width, rect3.height);
-		}
-//		z
 		// render Bob
+		debugRenderer.setProjectionMatrix(cam.combined);
 		Rectangle rect = player.getBounds();
-		debugRenderer.setColor(new Color(0, 1, 0, 1));
+		debugRenderer.setColor(new Color(1,0, 0, 1));
+		debugRenderer.begin(ShapeType.Line);
 		debugRenderer.rect(rect.x, rect.y, Player.SIZE, Player.SIZE);
+		for(Chunk c:world.getChunks()){
+			for(Tile t:c.getTiles()){
+				debugRenderer.rect(t.getPosition().x,t.getPosition().y, t.SIZE,t.SIZE);
+				debugRenderer.setColor(new Color(1, 1, 0, 1));
+				debugRenderer.rect(t.getPosition().x,t.getPosition().y,0.10f,32);
+				debugRenderer.setColor(new Color(0, 1, 1, 1));
+				debugRenderer.rect(t.getPosition().x,t.getPosition().y+32,32,0.1f);
+			}
+		}
 		debugRenderer.end();
 	}
 }

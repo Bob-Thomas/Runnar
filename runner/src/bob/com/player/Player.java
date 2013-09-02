@@ -6,6 +6,7 @@ import bob.com.objects.Tile;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -133,8 +134,8 @@ public class Player {
 			this.helper.getPlayer().setRegion(this.regions[frame]);
 
 			}
-		public void Draw(WorldRenderer render){
-			render.getBatch().draw(this.helper.getPlayer(),bounds.x,bounds.y, Player.SIZE, Player.SIZE);
+		public void Draw(SpriteBatch batch){
+			batch.draw(this.helper.getPlayer(),bounds.x,bounds.y, Player.SIZE, Player.SIZE);
 
 		}
 

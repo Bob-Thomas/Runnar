@@ -1,0 +1,31 @@
+package bob.com.player;
+
+import bob.com.level.WorldRenderer;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class Score {
+	private static int score = 0;
+	private BitmapFont font;
+	
+	public static int getScore() {
+		return score;
+	}
+
+	public static void setScore(int score) {
+		Score.score = score;
+	}
+	public Score(){
+		font = new BitmapFont(Gdx.files.internal("fonts/pixel.fnt"),
+		         Gdx.files.internal("fonts/pixel.png"), false);
+	    font.setColor(Color.WHITE);
+	    font.scale(0f);
+	}
+	public void Draw(SpriteBatch batch,Player player){
+		font.draw(batch, "SCORE: "+Integer.toString(score), player.getPosition().x-150,200);
+
+	}
+}

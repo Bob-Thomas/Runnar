@@ -1,10 +1,13 @@
 package bob.com.runner;
 
+import bob.com.screens.GameOverScreen;
 import bob.com.screens.GameScreen;
 import bob.com.screens.StartScreen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -30,16 +33,15 @@ public class Runner extends Game {
 		this.splash = new StartScreen(this);
 		this.setPlay(new GameScreen(this));
 		this.batch = new SpriteBatch();
-		this.setBatch(this.batch);
 		this.setScreen(splash);
-		Gdx.graphics.setVSync(true);
 	}
 	public void dispose() {
 		super.dispose();
 	}
 
 	@Override
-	public void render() {		
+	public void render() {
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		super.render();
 	}
 

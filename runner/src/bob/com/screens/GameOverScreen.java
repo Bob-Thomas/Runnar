@@ -71,7 +71,6 @@ public class GameOverScreen implements  Screen {
 	    {
 	        if(Gdx.input.justTouched())
 	        {
-	        	Gdx.app.log("ouch", "you hit me ");
 	            game.setScreen(new GameScreen(game));
 	        }
 	    }

@@ -4,6 +4,7 @@ import bob.com.atlas.TextureHelper;
 import bob.com.level.WorldRenderer;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -43,15 +44,15 @@ public class Coin {
 		this.helper = new TextureHelper();
 		this.texture = this.helper.getCoins();
 		this.position = position;
-		this.bounds = new Rectangle(position.x,position.y,32,32);
+		this.bounds = new Rectangle(position.x,position.y,16,16);
 		regions[0] = new TextureRegion(texture, 0,0,32,32);
 		regions[1] = new TextureRegion(texture, 32,0,32,32);
 		regions[2] = new TextureRegion(texture, 64,0,32,32);
 		regions[3] = new TextureRegion(texture, 96,0,32,32);
-	}
+	}	
 	public void Update(float delta){
 		timer += Gdx.graphics.getDeltaTime();
-		if(timer > 0.15){
+		if(timer > 0.11){
 			timer = 0;
 			frame ++;
 		}
@@ -61,7 +62,7 @@ public class Coin {
 		texture.setRegion(this.regions[frame]);
 
 	}
-	public void Draw(WorldRenderer render){
-		render.getBatch().draw(this.helper.getCoins(),position.x,position.y, 16, 16);
+	public void Draw(SpriteBatch batch){
+		batch.draw(this.helper.getCoins(),position.x,position.y, 16, 16);
 	}
 }

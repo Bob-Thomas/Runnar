@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;Chunk.java&apos; to &apos;runner/src/bob.com.level&apos;&#x0D;&#x0A;- Original project: &apos;Chunks&apos;&#x0D;&#x0A;- Destination element: &apos;runner/src/bob.com.level&apos;&#x0D;&#x0A;- Original element: &apos;com.danielvandrunen.chunks.Chunk.java&apos;" description="Copy compilation unit" destination="=runner/src&lt;bob.com.level" element1="/src&lt;com.danielvandrunen.chunks{Chunk.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1377719183632" units="1" version="1.0"/>
+</session>

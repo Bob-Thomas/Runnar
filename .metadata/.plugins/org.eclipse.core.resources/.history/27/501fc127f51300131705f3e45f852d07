@@ -1,0 +1,44 @@
+package bob.com.level;
+
+import java.util.ArrayList;
+
+import com.badlogic.gdx.utils.Array;
+
+
+
+import bob.com.objects.Tile;
+
+public class Chunk{
+	private int x;
+	private int y;
+	private int blocksWidth;
+	private int blocksHeight;
+	private Array<Tile> tiles;
+	
+	public Array<Tile> getTiles() {
+		return tiles;
+	}
+	public void setTiles(Array<Tile> tiles) {
+		this.tiles = tiles;
+	}
+	public Chunk(int x, int y, int blocksWidth, int blocksHeight,int random){
+		this.x = x;
+		this.y = y;
+		this.blocksWidth = blocksWidth;
+		this.blocksHeight = blocksHeight;
+		this.tiles = new Array<Tile>();
+		
+		for(int i = 0; i < blocksWidth * 32; i += 32){
+			for(int o = 0; o < blocksHeight * 32; o += 32){
+				this.tiles.add(new Tile(this.x + i, this.y + o,random));
+			}
+		}
+		
+	}
+	public void render(WorldRenderer graphics){
+//		for(Tile block : this.tiles){
+//			block.Draw(graphics);
+//		}
+	}
+	
+}

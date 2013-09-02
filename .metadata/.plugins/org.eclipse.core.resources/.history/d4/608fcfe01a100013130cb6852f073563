@@ -1,0 +1,36 @@
+package bob.com.level;
+
+import java.util.ArrayList;
+
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+
+public class Chunk{
+	private int x;
+	private int y;
+	private int blocksWidth;
+	private int blocksHeight;
+	private Color color;
+	private ArrayList<Block> blocks;
+	
+	public Chunk(int x, int y, int blocksWidth, int blocksHeight, Color color){
+		this.x = x;
+		this.y = y;
+		this.blocksWidth = blocksWidth;
+		this.blocksHeight = blocksHeight;
+		this.color = color;
+		this.blocks = new ArrayList<Block>();
+		
+		for(int i = 0; i < blocksWidth * 16; i += 16){
+			for(int o = 0; o < blocksHeight * 16; o += 16){
+				this.blocks.add(new Block(0, this.x + i, this.y + o));
+			}
+		}
+	}
+	
+	public void render(Graphics graphics){
+		for(Block block : this.blocks){
+			block.render(graphics, this.color);
+		}
+	}
+}

@@ -1,0 +1,106 @@
+package bob.com.level;
+
+
+import bob.com.background.Background;
+import bob.com.objects.Coin;
+import bob.com.objects.Tile;
+import bob.com.player.Player;
+import bob.com.player.Player.State;
+import bob.com.player.Score;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+
+public class WorldRenderer {
+
+	private static final float CAMERA_WIDTH = 10f;
+	private static final float CAMERA_HEIGHT =7f;
+	private World world;
+	private Score score;
+	private OrthographicCamera cam;
+    CharSequence str = "012345679";
+	/** for debug rendering **/
+	ShapeRenderer debugRenderer = new ShapeRenderer();
+
+	/** Textures **/
+	
+	private boolean debug = false;
+	private int width;
+	private int height;
+	private Player player;
+
+	public OrthographicCamera getCam() {
+		return cam;
+	}
+	public void setCam(OrthographicCamera cam) {
+		this.cam = cam;
+	}
+	public SpriteBatch getBatch(){
+		return spriteBatch;
+	}
+	public void setSize (int w, int h) {
+		this.width = w;
+		this.height = h;
+
+	}
+	public boolean isDebug() {
+		return debug;
+	}
+	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+
+	public WorldRenderer(World world, boolean debug) {
+		this.world = world;
+		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
+		this.cam.zoom = 40f;
+		this.debug = debug;
+		this.score = new Score();
+		player = world.getPlayer();
+	}
+
+
+	public void render(float delta) {
+			Background background = world.getBackground();
+		    this.cam.position.set(player.getPosition().x,100,0);
+			this.cam.update();
+			background.Draw(this);
+			for(Chunk chunk : world.getChunks()){
+				chunk.render(this);
+			}
+			for(Coin coin:world.getCoins()){
+				coin.Draw(this);
+			}
+			player.Draw(this);
+			score.Draw(this, player);
+			if(debug){
+				drawDebug();
+			}
+			
+			//drawDebug();
+	}
+
+
+
+
+		
+	private void drawDebug() {
+		// render Bob
+		Rectangle rect = player.getBounds();
+		debugRenderer.setColor(new Color(0, 1, 0, 1));
+		debugRenderer.rect(rect.x, rect.y, Player.SIZE, Player.SIZE);
+		debugRenderer.end();
+	}
+}

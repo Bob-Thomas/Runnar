@@ -75,7 +75,6 @@ public class StartScreen implements  Screen {
 	    {
 	        if(Gdx.input.justTouched())
 	        {
-	        	Gdx.app.log("ouch", "you hit me ");
 	            game.setScreen(this.game.get_play());
 	        }
 	    }

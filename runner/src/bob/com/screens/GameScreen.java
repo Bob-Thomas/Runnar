@@ -4,13 +4,16 @@ import bob.com.level.World;
 import bob.com.level.WorldRenderer;
 import bob.com.objects.Tile;
 import bob.com.player.Controller;
+import bob.com.player.Score;
 import bob.com.runner.Runner;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
 
 public class GameScreen  implements Screen, InputProcessor {
 
@@ -18,24 +21,25 @@ public class GameScreen  implements Screen, InputProcessor {
 	private WorldRenderer 	renderer;
 	private Controller	controller;
 	private Runner game;
-	
+	private FPSLogger logger;
 	public GameScreen(Runner game){
 		this.game = game;
+		logger = new FPSLogger();
 		world = new World();
-		renderer = new WorldRenderer(world,false);
+		renderer = new WorldRenderer(world,false,game);
 		controller = new Controller(world,game);
 		Gdx.input.setInputProcessor(this);
 	}	
 	@Override
 	public void show() {
-
+		Score.setScore(0);
 	}
 
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		world.update(delta);
 		controller.update(delta);
+		renderer.Update(delta);
 		this.game.getBatch().begin();
 		renderer.render(delta);
 		this.game.getBatch().end();
@@ -65,16 +69,18 @@ public class GameScreen  implements Screen, InputProcessor {
 	@Override
 	public void dispose() {
 		Gdx.input.setInputProcessor(null);
+		this.game = null;
+		 logger = null;
+		world = null;
+		renderer =null;
+		controller = null;
 	}
 
 	// * InputProcessor methods ***************************//
 
 	@Override
 	public boolean keyDown(int keycode) {
-		if (keycode == Keys.LEFT)
-			controller.leftPressed();
-		if (keycode == Keys.RIGHT)
-			controller.rightPressed();
+
 		if (keycode == Keys.Z)
 			controller.jumpPressed();
 		return true;
@@ -82,10 +88,7 @@ public class GameScreen  implements Screen, InputProcessor {
 
 	@Override
 	public boolean keyUp(int keycode) {
-		if (keycode == Keys.LEFT)
-			controller.leftReleased();
-		if (keycode == Keys.RIGHT)
-			controller.rightReleased();
+
 		if (keycode == Keys.Z)
 			controller.jumpReleased();
 		return true;

@@ -1,0 +1,29 @@
+package bob.com.level;
+
+import java.util.ArrayList;
+
+
+import bob.com.objects.Tile;
+
+public class Chunk{
+	private int x;
+	private int y;
+	private int blocksWidth;
+	private int blocksHeight;
+	private ArrayList<Tile> tiles;
+	
+	public Chunk(int x, int y, int blocksWidth, int blocksHeight,int random){
+		this.x = x;
+		this.y = y;
+		this.blocksWidth = blocksWidth;
+		this.blocksHeight = blocksHeight;
+		this.tiles = new ArrayList<Tile>();
+		
+		for(int i = 0; i < blocksWidth * 16; i += 16){
+			for(int o = 0; o < blocksHeight * 16; o += 16){
+				this.tiles.add(new Tile(this.x + i, this.y + o,random));
+			}
+		}
+	}
+	
+}

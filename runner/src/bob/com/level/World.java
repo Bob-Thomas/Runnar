@@ -67,7 +67,7 @@ public class World {
 		}	
 		
 		if( player.getPosition().x > (amount-(32*10)) ){
-			randomnumber = random.nextInt((3 - 0) + 1) + 0;
+			randomnumber = random.nextInt((5 - 0) + 1) + 0;
 
 			 generateRandom(randomnumber);
 		}
@@ -100,13 +100,22 @@ public class World {
 		switch(random)
 		{
 		case 1:
-			 AddChunk(amount,0,1,1,3);
+			 AddChunk(amount,0,1,1,1);
 			break;
 		case 2:
-			 AddChunk(amount,0,1,2,1);
+			 AddChunk(amount,0,1,2,2);
 			break;
 		case 3:
-			 AddChunk(amount,0,1,2,2);
+			 AddChunk(amount,0,1,2,3);
+			break;
+		case 4:
+			 AddChunk(amount,0,3,2,1);
+			break;
+		case 5:
+			 AddChunk(amount,0,1,3,3);
+			break;
+		case 6:
+			 AddChunk(amount,0,1,3,2);
 			break;
 		default:
 			break;

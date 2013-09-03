@@ -12,7 +12,7 @@ public class Tile {
 	private Vector2 	position;
 	private Rectangle 	box;
 	private AtlasRegion texture;
-	private TextureRegion[]  regions = new TextureRegion[1];
+	private TextureRegion[]  regions = new TextureRegion[4];
 	private int texselect = 0;
 
 	public Vector2 getPosition() {
@@ -29,10 +29,13 @@ public class Tile {
 		this.texselect = texselect;;
 		this.box = new Rectangle(this.position.x,this.position.y,SIZE,SIZE);
 		regions[0] = new TextureRegion(texture, 0,0,32,32);
+		regions[1] = new TextureRegion(texture, 32,0,32,32);
+		regions[2] = new TextureRegion(texture, 64,0,32,32);
+		regions[3] = new TextureRegion(texture, 98,0,32,32);
 
 	}
 	public void Draw(SpriteBatch batch){
-		batch.draw(regions[0],position.x,position.y, Tile.SIZE, Tile.SIZE);
+		batch.draw(regions[texselect],position.x,position.y, Tile.SIZE, Tile.SIZE);
 
 	}
 

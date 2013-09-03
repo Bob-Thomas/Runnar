@@ -1,7 +1,9 @@
 package bob.com.level;
 
 import java.util.ArrayList;
+import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
@@ -18,6 +20,7 @@ public class Chunk{
 	private int blocksHeight;
 	private ArrayList<Tile> tiles;
 	private ArrayList<Coin> coins;
+	private Random rand = new Random();
 	public ArrayList<Tile> getTiles() {
 		return tiles;
 	}
@@ -34,13 +37,15 @@ public class Chunk{
 		this.blocksHeight = blocksHeight;
 		this.tiles = new ArrayList<Tile>();
 		this.coins = new ArrayList<Coin>();
-		
+		int randnr = rand.nextInt((10 - 0) + 1) + 0;
+		int texselect = rand.nextInt((3 - 0) + 1) + 0;
+		if(blocksHeight == 3 && randnr == 0||randnr == 2||randnr == 6){
+			this.coins.add(new Coin(new Vector2(this.x+(blocksWidth*16),this.y+(blocksHeight*32))));
+		}
 		for(int i = 0; i < blocksWidth * 32; i += 32){
 			for(int o = 0; o < blocksHeight * 32; o += 32){
-				this.tiles.add(new Tile(this.x + i, this.y + o,random));
-				if(o > 0*32){
-				this.coins.add(new Coin(new Vector2(this.x+i,this.y+(o+32))));
-				}
+				this.tiles.add(new Tile(this.x + i, this.y + o,texselect));
+				Gdx.app.log("height", Integer.toString(randnr));
 			}
 		}
 		
@@ -58,6 +63,7 @@ public class Chunk{
 		for(Coin c:this.coins){
 			c.Update(delta);			
 		}
+
 	}
 	
 }

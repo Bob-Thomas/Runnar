@@ -1,0 +1,46 @@
+package bob.com.objects;
+import bob.com.atlas.TextureHelper;
+import bob.com.runner.Runner;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+public class Tile {
+	
+	public static final float SIZE = 32f;
+	private TextureHelper helper;
+	private Vector2 	position;
+	private Rectangle 	box;
+	private AtlasRegion texture;
+	private TextureRegion[]  regions = new TextureRegion[4];
+	private int texselect = 0;
+	private Runner game;
+
+	public Vector2 getPosition() {
+		return position;
+	}
+
+	public Rectangle get_box(){
+		return this.box;
+	}
+	public Tile(float x,float y,int texselect,Runner game) {
+		this.game = game;
+		this.position = new Vector2(x,y);
+		this.helper = this.game.getHelper();
+		this.texture = this.game.getHelper().getBlocks();
+		this.texselect = texselect;;
+		this.box = new Rectangle(this.position.x,this.position.y,SIZE,SIZE);
+		regions[0] = new TextureRegion(texture, 0,0,32,32);
+		regions[1] = new TextureRegion(texture, 32,0,32,32);
+		regions[2] = new TextureRegion(texture, 64,0,32,32);
+		regions[3] = new TextureRegion(texture, 98,0,32,32);
+
+	}
+	public void Draw(SpriteBatch batch){
+		batch.draw(regions[texselect],position.x,position.y, Tile.SIZE, Tile.SIZE);
+
+	}
+
+}

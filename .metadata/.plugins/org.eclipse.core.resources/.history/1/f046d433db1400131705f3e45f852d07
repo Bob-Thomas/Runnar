@@ -1,0 +1,69 @@
+package bob.com.runner;
+
+import bob.com.atlas.TextureHelper;
+import bob.com.screens.GameOverScreen;
+import bob.com.screens.GameScreen;
+import bob.com.screens.StartScreen;
+
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+public class Runner extends Game {
+	private StartScreen splash;
+	private GameScreen play;
+	private SpriteBatch batch;
+	private TextureHelper helper;
+	public SpriteBatch getBatch() {
+		return batch;
+	}
+	public void setBatch(SpriteBatch batch) {
+		this.batch = batch;
+	}
+	public GameScreen get_play(){
+		return play;
+	}
+	public void setPlay(GameScreen play) {
+		this.play = play;
+	}
+	public TextureHelper getHelper(){
+		return this.helper;
+	}
+	@Override
+	public void create() {
+		this.helper = new TextureHelper();
+		this.splash = new StartScreen(this);
+		this.setPlay(new GameScreen(this));
+		this.batch = new SpriteBatch();
+		this.setScreen(splash);
+	}
+	public void dispose() {
+		super.dispose();
+	}
+
+	@Override
+	public void render() {
+		Gdx.graphics.getGL20().glClearColor( 1, 0, 0, 1 );
+		  Gdx.graphics.getGL20().glClear( GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT );
+		super.render();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+	}
+
+	@Override
+	public void pause() {
+		super.pause();
+	}
+
+	@Override
+	public void resume() {
+		super.resume();
+	}
+
+}

@@ -2,6 +2,7 @@ package bob.com.objects;
 
 import bob.com.atlas.TextureHelper;
 import bob.com.level.WorldRenderer;
+import bob.com.runner.Runner;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,7 +19,7 @@ public class Coin {
 	private Rectangle bounds;
 	private float timer;
 	private int frame;
-	
+	private Runner game;
 	public AtlasRegion getTexture() {
 		return texture;
 	}
@@ -40,8 +41,9 @@ public class Coin {
 	public int getFrame() {
 		return frame;
 	}
-	public Coin(Vector2 position){
-		this.helper = new TextureHelper();
+	public Coin(Vector2 position,Runner game){
+		this.game = game;
+		this.helper = this.game.getHelper();
 		this.texture = this.helper.getCoins();
 		this.position = position;
 		this.bounds = new Rectangle(position.x,position.y,16,16);
@@ -59,10 +61,9 @@ public class Coin {
 		if(frame > 3){
 			frame = 0;
 		}
-		texture.setRegion(this.regions[frame]);
 
 	}
 	public void Draw(SpriteBatch batch){
-		batch.draw(this.helper.getCoins(),position.x,position.y, 16, 16);
+		batch.draw(this.regions[frame],position.x,position.y, 16, 16);
 	}
 }

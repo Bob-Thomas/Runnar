@@ -21,7 +21,8 @@ public class GameOverScreen implements  Screen {
 	private float timer;
 	public GameOverScreen(Runner game){
 		this.game = game;
-		this.helper = new TextureHelper();
+		this.helper = this.game.getHelper();
+
 	}
 	@Override
 	public void render(float delta) {

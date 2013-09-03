@@ -24,8 +24,7 @@ public class GameScreen  implements Screen, InputProcessor {
 	private FPSLogger logger;
 	public GameScreen(Runner game){
 		this.game = game;
-		logger = new FPSLogger();
-		world = new World();
+		world = new World(this.game);
 		renderer = new WorldRenderer(world,false,game);
 		controller = new Controller(world,game);
 		Gdx.input.setInputProcessor(this);
@@ -69,11 +68,10 @@ public class GameScreen  implements Screen, InputProcessor {
 	@Override
 	public void dispose() {
 		Gdx.input.setInputProcessor(null);
-		this.game = null;
-		 logger = null;
 		world = null;
-		renderer =null;
+		renderer = null;
 		controller = null;
+		
 	}
 
 	// * InputProcessor methods ***************************//

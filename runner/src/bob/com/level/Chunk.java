@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import bob.com.objects.Coin;
 import bob.com.objects.Tile;
+import bob.com.runner.Runner;
 import bob.com.screens.GameScreen;
 
 public class Chunk{
@@ -21,6 +22,7 @@ public class Chunk{
 	private ArrayList<Tile> tiles;
 	private ArrayList<Coin> coins;
 	private Random rand = new Random();
+	private Runner game;
 	public ArrayList<Tile> getTiles() {
 		return tiles;
 	}
@@ -30,7 +32,8 @@ public class Chunk{
 	public void setTiles(ArrayList<Tile> tiles) {
 		this.tiles = tiles;
 	}
-	public Chunk(int x, int y, int blocksWidth, int blocksHeight,int random){
+	public Chunk(int x, int y, int blocksWidth, int blocksHeight,int random,Runner game){
+		this.game = game;
 		this.x = x;
 		this.y = y;
 		this.blocksWidth = blocksWidth;
@@ -38,14 +41,14 @@ public class Chunk{
 		this.tiles = new ArrayList<Tile>();
 		this.coins = new ArrayList<Coin>();
 		int randnr = rand.nextInt((10 - 0) + 1) + 0;
-		int texselect = rand.nextInt((3 - 0) + 1) + 0;
 		if(blocksHeight == 3 && randnr == 0||randnr == 2||randnr == 6){
-			this.coins.add(new Coin(new Vector2(this.x+(blocksWidth*16),this.y+(blocksHeight*32))));
+			this.coins.add(new Coin(new Vector2(this.x+(blocksWidth*16),this.y+(blocksHeight*32)),this.game));
 		}
 		for(int i = 0; i < blocksWidth * 32; i += 32){
 			for(int o = 0; o < blocksHeight * 32; o += 32){
-				this.tiles.add(new Tile(this.x + i, this.y + o,texselect));
-				Gdx.app.log("height", Integer.toString(randnr));
+				int texselect = rand.nextInt((3 - 0) + 1) + 0;	
+				this.tiles.add(new Tile(this.x + i, this.y + o,0,this.game));
+				Gdx.app.log("height", Integer.toString(Gdx.graphics.getFramesPerSecond()));
 			}
 		}
 		

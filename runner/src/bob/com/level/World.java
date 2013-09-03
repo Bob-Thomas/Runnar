@@ -8,6 +8,7 @@ import java.util.Random;
 import sun.rmi.runtime.Log;
 import bob.com.player.Player;
 import bob.com.player.Score;
+import bob.com.runner.Runner;
 import bob.com.background.Background;
 import bob.com.objects.Coin;
 import bob.com.objects.Tile;
@@ -23,6 +24,7 @@ public class World {
 	private int randomnumber;
 	private Background background;
 	private Rectangle delRect;
+	private Runner game;
 	/** The blocks making up the world **/
 	private ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 	ArrayList<Coin> coins = new ArrayList<Coin>();
@@ -47,10 +49,11 @@ public class World {
 	}
 	// --------------------
 
-	public World() {
-		player = new Player(new Vector2(0, 320));
+	public World(Runner game) {
+		this.game = game;
+		player = new Player(new Vector2(0, 320),this.game);
 		this.delRect = new Rectangle(0,-100,10,500);
-		this.background = new Background(new Vector2(-500,-100),new Vector2(-500,-100),new Vector2(-1000,-100));
+		this.background = new Background(new Vector2(-500,-100),new Vector2(-500,-100),new Vector2(-1000,-100),this.game);
 		generateLevel();
 	}
 	public void update(float delta)
@@ -68,9 +71,8 @@ public class World {
 		
 		if( player.getPosition().x > (amount-(32*10)) ){
 			randomnumber = random.nextInt((5 - 0) + 1) + 0;
-
-			 generateRandom(randomnumber);
-		}
+			generateRandom(randomnumber);
+			}
 		for(Chunk c:chunks){
 			if(c.getTiles().get(0).get_box().overlaps(delRect))
 			{
@@ -97,29 +99,30 @@ public class World {
 	}
 	private void generateRandom(int random){
 
-		switch(random)
-		{
-		case 1:
-			 AddChunk(amount,0,1,1,1);
-			break;
-		case 2:
-			 AddChunk(amount,0,1,2,2);
-			break;
-		case 3:
-			 AddChunk(amount,0,1,2,3);
-			break;
-		case 4:
-			 AddChunk(amount,0,3,2,1);
-			break;
-		case 5:
-			 AddChunk(amount,0,1,3,3);
-			break;
-		case 6:
-			 AddChunk(amount,0,1,3,2);
-			break;
-		default:
-			break;
-		}
+			switch(random)
+			{
+			case 1:
+				 AddChunk(amount,0,1,1,1);
+				break;
+			case 2:
+				 AddChunk(amount,0,1,2,2);
+				break;
+			case 3:
+				 AddChunk(amount,0,1,2,3);
+				break;
+			case 4:
+				 AddChunk(amount,0,3,2,1);
+				break;
+			case 5:
+				 AddChunk(amount,0,1,3,3);
+				break;
+			case 6:
+				 AddChunk(amount,0,1,3,2);
+				break;
+			default:
+				break;
+			}
+
 		 
 	}
 	private void generateLevel() {
@@ -131,10 +134,8 @@ public class World {
 	}
 	private void AddChunk(int x,int y,int w,int h,int i){
 		amount += w*32;
-		this.chunks.add(new Chunk(x, y, w, h,i));
+		this.chunks.add(new Chunk(x, y, w, h,i,this.game));
 	}
-	private void AddCoin(int x,int y){
-		this.coins.add(new Coin(new Vector2(x,y)));
-	}
+
 
 }

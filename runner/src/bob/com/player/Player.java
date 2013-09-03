@@ -2,6 +2,7 @@ package bob.com.player;
 import bob.com.atlas.TextureHelper;
 import bob.com.level.WorldRenderer;
 import bob.com.objects.Tile;
+import bob.com.runner.Runner;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
@@ -32,7 +33,7 @@ public class Player {
 		private int frame = 1;
 		private float timer;
 		private TextureHelper helper;
-
+		private Runner game;
 		public float getSpeed() {
 			return speed;
 		}
@@ -92,8 +93,9 @@ public class Player {
 
 
 
-		public Player(Vector2 position) {
-			this.helper = new TextureHelper();
+		public Player(Vector2 position,Runner game) {
+			this.game = game;
+			this.helper = this.game.getHelper();
 			this.position = position;
 			this.bounds.setHeight(SIZE);
 			this.bounds.setWidth(SIZE);
@@ -131,11 +133,9 @@ public class Player {
 			this.bounds.y = this.position.y;
 			this.position.x += this.velocity.x;
 			this.position.y = this.position.y  + this.velocity.y;
-			this.helper.getPlayer().setRegion(this.regions[frame]);
-
 			}
 		public void Draw(SpriteBatch batch){
-			batch.draw(this.helper.getPlayer(),bounds.x,bounds.y, Player.SIZE, Player.SIZE);
+			batch.draw(regions[frame],bounds.x,bounds.y, Player.SIZE, Player.SIZE);
 
 		}
 

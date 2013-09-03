@@ -1,5 +1,6 @@
 package bob.com.runner;
 
+import bob.com.atlas.TextureHelper;
 import bob.com.screens.GameOverScreen;
 import bob.com.screens.GameScreen;
 import bob.com.screens.StartScreen;
@@ -15,7 +16,7 @@ public class Runner extends Game {
 	private StartScreen splash;
 	private GameScreen play;
 	private SpriteBatch batch;
-	
+	private TextureHelper helper;
 	public SpriteBatch getBatch() {
 		return batch;
 	}
@@ -28,8 +29,12 @@ public class Runner extends Game {
 	public void setPlay(GameScreen play) {
 		this.play = play;
 	}
+	public TextureHelper getHelper(){
+		return this.helper;
+	}
 	@Override
 	public void create() {
+		this.helper = new TextureHelper();
 		this.splash = new StartScreen(this);
 		this.setPlay(new GameScreen(this));
 		this.batch = new SpriteBatch();
@@ -41,7 +46,8 @@ public class Runner extends Game {
 
 	@Override
 	public void render() {
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.graphics.getGL20().glClearColor( 0, 0, 0, 1 );
+		Gdx.graphics.getGL20().glClear( GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT );
 		super.render();
 	}
 

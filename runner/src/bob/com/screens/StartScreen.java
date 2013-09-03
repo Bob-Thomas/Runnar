@@ -24,7 +24,8 @@ public class StartScreen implements  Screen {
 	
 	public StartScreen(Runner game){
 		this.game = game;
-		this.helper = new TextureHelper();
+		this.helper = this.game.getHelper();
+
 	}
 	@Override
 	public void render(float delta) {

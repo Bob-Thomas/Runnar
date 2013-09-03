@@ -1,0 +1,133 @@
+package bob.com.screens;
+
+import bob.com.level.World;
+import bob.com.level.WorldRenderer;
+import bob.com.objects.Tile;
+import bob.com.player.Controller;
+import bob.com.player.Score;
+import bob.com.runner.Runner;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.GL20;
+
+public class GameScreen  implements Screen, InputProcessor {
+
+	private World 			world;
+	private WorldRenderer 	renderer;
+	private Controller	controller;
+	private Runner game;
+	private FPSLogger logger;
+	public GameScreen(Runner game){
+		this.game = game;
+		logger = new FPSLogger();
+		world = new World();
+		renderer = new WorldRenderer(world,false,game);
+		controller = new Controller(world,game);
+		Gdx.input.setInputProcessor(this);
+	}	
+	@Override
+	public void show() {
+		Score.setScore(0);
+	}
+
+	@Override
+	public void render(float delta) {
+		world.update(delta);
+		controller.update(delta);
+		renderer.Update(delta);
+		this.game.getBatch().begin();
+		renderer.render(delta);
+		this.game.getBatch().end();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+        renderer.setSize(width, height);
+
+	}
+
+	@Override
+	public void hide() {
+		Gdx.input.setInputProcessor(null);
+	}
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void dispose() {
+		Gdx.input.setInputProcessor(null);
+		this.game = null;
+		 logger = null;
+		world = null;
+		renderer =null;
+		controller = null;
+	}
+
+	// * InputProcessor methods ***************************//
+
+	@Override
+	public boolean keyDown(int keycode) {
+
+		if (keycode == Keys.Z)
+			controller.jumpPressed();
+		return true;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+
+		if (keycode == Keys.Z)
+			controller.jumpReleased();
+		return true;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean touchDown(int x, int y, int pointer, int button) {
+		controller.jumpPressed();
+		return true;
+	}
+
+	@Override
+	public boolean touchUp(int x, int y, int pointer, int button) {
+		controller.jumpReleased();
+		return true;
+	}
+
+	@Override
+	public boolean touchDragged(int x, int y, int pointer) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved(int x, int y) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean scrolled(int amount) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+}

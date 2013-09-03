@@ -7,12 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 
 import bob.com.atlas.TextureHelper;
 import bob.com.level.WorldRenderer;
+import bob.com.runner.Runner;
 
 public class Background {
 	private TextureHelper helper;
 	private AtlasRegion texture;
 	private Vector2 position,position2,position3;
-	
+	private Runner game;
 	public TextureHelper getHelper() {
 		return helper;
 	}
@@ -37,11 +38,12 @@ public class Background {
 	public void setPosition3(Vector2 position) {
 		this.position3 = position;
 	}
-	public Background(Vector2 position,Vector2 position2,Vector2 position3){
+	public Background(Vector2 position,Vector2 position2,Vector2 position3,Runner game){
+		this.game = game;
 		this.position = position;
 		this.position2 = position2;
 		this.position3 = position3;
-		this.helper = new TextureHelper();
+		this.helper = this.game.getHelper();
 		this.texture = this.helper.getBackground();
 		
 	}

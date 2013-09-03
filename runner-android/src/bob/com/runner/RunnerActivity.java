@@ -17,7 +17,7 @@ public class RunnerActivity extends AndroidApplication {
 		config.useAccelerometer = true;
 		config.useCompass = true;
 		config.useWakelock = true;
-		config.useGL20 = false;
+		config.useGL20 = true;
 		initialize(new Runner(), config);
     }
 }

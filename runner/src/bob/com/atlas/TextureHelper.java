@@ -7,8 +7,17 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class TextureHelper {
 	private TextureAtlas atlas;
-	private AtlasRegion blocks,player,splash,gameover,background,coins;
+	private AtlasRegion blocks,player,splash,gameover,background,coins,doubleJump;
 	
+	
+	public AtlasRegion getDoubleJump() {
+		return doubleJump;
+	}
+
+	public void setDoubleJump(AtlasRegion doubleJump) {
+		this.doubleJump = doubleJump;
+	}
+
 	public AtlasRegion getCoins() {
 		return coins;
 	}
@@ -44,5 +53,6 @@ public class TextureHelper {
 		this.gameover = this.atlas.findRegion("gameover");
 		this.background = this.atlas.findRegion("city");
 		this.coins = this.atlas.findRegion("coins");
+		this.doubleJump = this.atlas.findRegion("doubleJump");
 	}
 }

@@ -1,0 +1,90 @@
+package bob.com.level;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Random;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+
+
+
+import bob.com.objects.Coin;
+import bob.com.objects.Tile;
+import bob.com.runner.Runner;
+import bob.com.screens.GameScreen;
+
+public class Chunk{
+	private FileHandle file;
+	private int x;
+	private int y;
+	private int blocksWidth;
+	private int blocksHeight;
+	private ArrayList<Tile> tiles;
+	private ArrayList<Coin> coins;
+	private Random rand = new Random();
+	private Runner game;
+	private ArrayList<String> lines;
+	public ArrayList<Tile> getTiles() {
+		return tiles;
+	}
+	public ArrayList<Coin> getCoins() {
+		return coins;
+	}
+	public void setTiles(ArrayList<Tile> tiles) {
+		this.tiles = tiles;
+	}
+	public Chunk(int x, int y, int blocksWidth, int blocksHeight,int random,Runner game){
+		this.game = game;
+		this.x = x;
+		this.y = y;
+		this.blocksWidth = blocksWidth;
+		this.blocksHeight = blocksHeight;
+		this.tiles = new ArrayList<Tile>();
+		this.coins = new ArrayList<Coin>();
+		int randnr = rand.nextInt((10 - 0) + 1) + 0;
+		
+		
+	}
+	private void generateLevel(int random){
+		// open the text file ready for reading
+		this.lines = new ArrayList<String>();
+		this.file = Gdx.files.internal("level/Level.txt");
+		BufferedReader reader = new BufferedReader(new InputStreamReader(file.read()));
+		String line = reader.readLine();
+		while(line != null){  
+		  lines.add(line);
+		  line = reader.readLine();
+
+		  for(i=1;i<string_length(s)+1;i+=1) // loop thru each character
+			switch(string_char_at(s,i)){   // check the character at the position that is being looped thru
+		  	case '.': instance_create(i*32-32,j*32,obj_grass); break;
+		  	case '#': instance_create(i*32-32,j*32,obj_mountain); break;
+			}
+
+		  j+=1;           	// move one row down
+		  file_text_readln(leveldata) // start reading next line
+		}
+
+		file_text_close(leveldata)
+	}
+	public void render(SpriteBatch batch){
+		for(Tile block : this.tiles){
+			block.Draw(batch);
+		}
+		for(Coin c:this.coins){
+			c.Draw(batch);
+			
+		}
+	}
+	public void Update(float delta){
+		for(Coin c:this.coins){
+			c.Update(delta);			
+		}
+
+	}
+	
+}

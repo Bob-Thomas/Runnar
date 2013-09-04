@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
 
 import bob.com.level.Chunk;
 import bob.com.level.World;
@@ -37,15 +38,24 @@ public class Controller {
 	// these are temporary
 	private static final float WIDTH = 10f;
 	private long	jumpPressedTime;
-	private boolean jumpingPressed;
+	private boolean jumpingPressed = false;
+	private Runner game;
+	private boolean spacePressed;
 	private boolean grounded = false;
-	private Runner game;	
 	static {
 		keys.put(Keys.LEFT, false);
 		keys.put(Keys.RIGHT, false);
 		keys.put(Keys.JUMP, false);
 		keys.put(Keys.FIRE, false);
 	};
+
+	public boolean isSpacePressed() {
+		return spacePressed;
+	}
+
+	public void setSpacePressed(boolean spacePressed) {
+		this.spacePressed = spacePressed;
+	}
 
 	public Controller(World world,Runner game) {
 		this.world = world;
@@ -98,7 +108,8 @@ public class Controller {
 		}
 		else
 		{
-			if(player.getState() != State.DYING){player.setState(State.FALLING);}
+			if(player.getState() != State.DYING){
+				player.setState(State.FALLING);}
 			player.getVelocity().y += grav;
 		}
 		if(player.getVelocity().x > MAX_VEL){
@@ -137,10 +148,26 @@ public class Controller {
 	}
 
 	private void processInput() {
-		if (keys.get(Keys.JUMP) && UpCollision() && player.getState() != State.DYING
-				) {
+		if(UpCollision()){
+			grounded = true;
+		}
+		else{
+			if(spacePressed == false){
+			grounded = false;
+			}
+		}
+		System.out.println(this.player.isDoubleJump());
+		if(this.player.isDoubleJump()&& grounded == false){ // if both variables are true
+		     if(spacePressed){ //and if the up arrow is pressed
+		    	  player.getVelocity().y = player.getJump_velocity();
+		          this.player.setDoubleJump(false); //then, prevent additional double jumps
+		     }
+		}
+		if (grounded == true&&player.getState() == State.WALKING) {
+			if(spacePressed){
 			player.getVelocity().y = player.getJump_velocity();
 			player.setState(State.JUMPING);
+			}
 		}
 	}
 
@@ -150,7 +177,6 @@ public class Controller {
 			Rectangle rect = new Rectangle(tile.getPosition().x,tile.getPosition().y+44,32,0.1f);
 			if(player.getBounds().overlaps(rect)){	
 				if(player.getPosition().y < rect.y){
-
 					return true;
 				}
 			}

@@ -1,0 +1,193 @@
+package bob.com.player;
+
+import java.awt.geom.Point2D;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
+
+import bob.com.level.Chunk;
+import bob.com.level.World;
+import bob.com.objects.Tile;
+import bob.com.player.Player.State;
+import bob.com.runner.Runner;
+import bob.com.screens.GameOverScreen;
+
+public class Controller {
+
+	enum Keys {
+		LEFT, RIGHT, JUMP, FIRE
+	}
+
+	private World 	world;
+	private Player 	player;
+	private float jumptime;
+	private float deathTime;
+	static Map<Keys, Boolean> keys = new HashMap<Controller.Keys, Boolean>();
+	private  float jumpTime 	= 0f;
+	private static float accel 	= 0;
+	private  float grav = -0.5f;
+	private static final float MAX_JUMP_SPEED	= 1f;
+	private static final float DAMP 			= 0.90f;
+	private static final float MAX_VEL 			= 2f;
+	
+	// these are temporary
+	private static final float WIDTH = 10f;
+	private long	jumpPressedTime;
+	private boolean jumpingPressed = false;
+	private boolean grounded = false;
+	private Runner game;	
+	static {
+		keys.put(Keys.LEFT, false);
+		keys.put(Keys.RIGHT, false);
+		keys.put(Keys.JUMP, false);
+		keys.put(Keys.FIRE, false);
+	};
+
+	public Controller(World world,Runner game) {
+		this.world = world;
+		this.game = game;
+		this.player = world.getPlayer();
+	}
+
+	// ** Key presses and touches **************** //
+
+	public void leftPressed() {
+		keys.get(keys.put(Keys.LEFT, true));
+	}
+
+	public void rightPressed() {
+		keys.get(keys.put(Keys.RIGHT, true));
+	}
+
+	public void jumpPressed() {
+		keys.get(keys.put(Keys.JUMP, true));
+	}
+
+	public void firePressed() {
+		keys.get(keys.put(Keys.FIRE, false));
+	}
+
+	public void leftReleased() {
+		keys.get(keys.put(Keys.LEFT, false));
+	}
+
+	public void rightReleased() {
+		keys.get(keys.put(Keys.RIGHT, false));
+	}
+
+	public void jumpReleased() {
+		keys.get(keys.put(Keys.JUMP, false));
+	}
+
+	public void fireReleased() {
+		keys.get(keys.put(Keys.FIRE, false));
+	}
+
+	/** The main update method **/
+	public void update(float delta) {
+		processInput();
+		player.update(delta);
+		player.getVelocity().x += 1f;
+		if(UpCollision() && player.getState() != State.DYING){
+			player.getVelocity().y  = 0;
+			player.setState(State.WALKING);
+		}
+		else
+		{
+			if(player.getState() != State.DYING){player.setState(State.FALLING);}
+			player.getVelocity().y += grav;
+		}
+		if(player.getVelocity().x > MAX_VEL){
+			player.getVelocity().x = MAX_VEL;
+		}
+		if(player.getVelocity().y < -6){
+			player.getVelocity().y = -6;
+		}
+		if(this.player.getState() == State.JUMPING){
+			
+		}
+		if(RightCollision()){
+			player.setState(State.DYING);
+		}
+		if(player.getPosition().y < -50){
+			player.setState(State.DYING);
+		}
+		if(player.getState() == State.DYING){
+			player.getVelocity().x = 0;
+			if(deathTime > 0 && deathTime < 0.5){
+			player.getVelocity().y = 2
+					;
+			}
+			else
+			{player.getVelocity().y += grav
+			;
+			
+			}
+			
+			deathTime += delta;
+			if(deathTime > 3){
+				this.game.setScreen(new GameOverScreen(this.game));
+				deathTime  = 0;
+			}
+		}
+	}
+
+	private void processInput() {
+		if (keys.get(Keys.JUMP)&&UpCollision() && player.getState() == State.WALKINGs) {
+			player.getVelocity().y = player.getJump_velocity();
+			player.setState(State.JUMPING);
+			
+		}
+		if (keys.get(Keys.JUMP) == false &&player.getState() == State.FALLING && player.isUsedJump() == false){
+			player.getVelocity().y = player.getJump_velocity();
+			player.setUsedJump(true);
+		}
+		if(player.isDoubleJump() && player.isUsedJump()){
+			player.setDoubleJump(false);
+
+		}
+	}
+
+	private  boolean UpCollision(){
+		for(Chunk chunk : world.getChunks()){
+			for(Tile tile:chunk.getTiles()){
+			Rectangle rect = new Rectangle(tile.getPosition().x,tile.getPosition().y+44,32,0.1f);
+			if(player.getBounds().overlaps(rect)){	
+				if(player.getPosition().y < rect.y){
+
+					return true;
+				}
+			}
+
+		 }
+		}
+
+		return false;
+
+	}
+	private  boolean RightCollision(){
+		for(Chunk chunk : world.getChunks()){
+		for(Tile tile:chunk.getTiles()){
+			Rectangle rect = new Rectangle(tile.getPosition().x,tile.getPosition().y,0.10f,32);
+			if(player.getBounds().overlaps(rect) && player.getState() != State.DYING
+					){	
+				if(player.getPosition().x < rect.x){
+
+					return true;
+				}
+			}
+		}
+
+		 }
+
+		return false;
+
+	}
+	
+}
+						

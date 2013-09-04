@@ -34,6 +34,16 @@ public class Player {
 		private float timer;
 		private TextureHelper helper;
 		private Runner game;
+		private boolean doubleJump = true;
+		private boolean usedJump = false;
+		public boolean isUsedJump() {
+			return usedJump;
+		}
+
+		public void setUsedJump(boolean usedJump) {
+			this.usedJump = usedJump;
+		}
+
 		public float getSpeed() {
 			return speed;
 		}
@@ -92,6 +102,14 @@ public class Player {
 		}
 
 
+
+		public boolean isDoubleJump() {
+			return doubleJump;
+		}
+
+		public void setDoubleJump(boolean doubleJump) {
+			this.doubleJump = doubleJump;
+		}
 
 		public Player(Vector2 position,Runner game) {
 			this.game = game;

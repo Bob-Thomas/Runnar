@@ -4013,3 +4013,23 @@ org.eclipse.swt.SWTException: Widget is disposed
 	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:584)
 	at org.eclipse.equinox.launcher.Main.run(Main.java:1438)
 	at org.eclipse.equinox.launcher.Main.main(Main.java:1414)
+
+!ENTRY com.google.gdt.eclipse.suite.ext 4 2 2013-09-04 06:50:19.468
+!MESSAGE Problems occurred when invoking code from plug-in: "com.google.gdt.eclipse.suite.ext".
+!STACK 0
+java.lang.NoClassDefFoundError: com/google/gdt/eclipse/suite/ext/update/ui/UpdateNotificationToastPopup$NotificationControlSelectedHandler
+	at com.google.gdt.eclipse.suite.ext.update.CompositeArtifactsDowloadJobChangeListener.notifyOfAvailableUpdates(CompositeArtifactsDowloadJobChangeListener.java:271)
+	at com.google.gdt.eclipse.suite.ext.update.CompositeArtifactsDowloadJobChangeListener.done(CompositeArtifactsDowloadJobChangeListener.java:155)
+	at org.eclipse.core.internal.jobs.JobListeners$3.notify(JobListeners.java:39)
+	at org.eclipse.core.internal.jobs.JobListeners.doNotify(JobListeners.java:112)
+	at org.eclipse.core.internal.jobs.JobListeners.done(JobListeners.java:152)
+	at org.eclipse.core.internal.jobs.JobManager.endJob(JobManager.java:647)
+	at org.eclipse.core.internal.jobs.WorkerPool.endJob(WorkerPool.java:105)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:70)
+Caused by: java.lang.ClassNotFoundException: com.google.gdt.eclipse.suite.ext.update.ui.UpdateNotificationToastPopup$NotificationControlSelectedHandler
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:501)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:421)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:412)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(Unknown Source)
+	... 8 more

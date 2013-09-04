@@ -79,16 +79,18 @@ public class GameScreen  implements Screen, InputProcessor {
 	@Override
 	public boolean keyDown(int keycode) {
 
-		if (keycode == Keys.Z)
+		if (keycode == Keys.SPACE)
 			controller.jumpPressed();
+			controller.setSpacePressed(true);
 		return true;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
 
-		if (keycode == Keys.Z)
+		if (keycode == Keys.SPACE)
 			controller.jumpReleased();
+			controller.setSpacePressed(false);
 		return true;
 	}
 
@@ -102,12 +104,14 @@ public class GameScreen  implements Screen, InputProcessor {
 	@Override
 	public boolean touchDown(int x, int y, int pointer, int button) {
 		controller.jumpPressed();
+		controller.setSpacePressed(true);
 		return true;
 	}
 
 	@Override
 	public boolean touchUp(int x, int y, int pointer, int button) {
 		controller.jumpReleased();
+		controller.setSpacePressed(false);
 		return true;
 	}
 

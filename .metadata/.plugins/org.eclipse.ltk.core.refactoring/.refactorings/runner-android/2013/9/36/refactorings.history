@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring accessors="true" comment="Delete 2 elements from project &apos;runner-android&apos;&#x0D;&#x0A;- Original project: &apos;runner-android&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     textures.atlas&#x0D;&#x0A;     textures.png" description="Delete elements" element1="assets/images/textures/textures.atlas" element2="assets/images/textures/textures.png" elements="0" flags="589830" id="org.eclipse.jdt.ui.delete" resources="2" stamp="1378322691681" subPackages="false" version="1.0"/>
+</session>

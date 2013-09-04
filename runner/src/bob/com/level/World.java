@@ -11,6 +11,7 @@ import bob.com.player.Score;
 import bob.com.runner.Runner;
 import bob.com.background.Background;
 import bob.com.objects.Coin;
+import bob.com.objects.JumpPowerup;
 import bob.com.objects.Tile;
 
 import com.badlogic.gdx.Gdx;
@@ -58,7 +59,7 @@ public class World {
 	}
 	public void update(float delta)
 	{
-		this.delRect.x = this.player.getPosition().x-10*32;
+		this.delRect.x = this.player.getPosition().x-(10*32);
 		if(this.background.getPosition().x+1000 < this.player.getPosition().x){
 			this.background.getPosition().x = this.player.getPosition().x-500;
 		}
@@ -70,11 +71,11 @@ public class World {
 		}	
 		
 		if( player.getPosition().x > (amount-(32*10)) ){
-			randomnumber = random.nextInt((5 - 0) + 1) + 0;
+			randomnumber = random.nextInt((8 - 0) + 1) + 0;
 			generateRandom(randomnumber);
 			}
 		for(Chunk c:chunks){
-			if(c.getTiles().get(0).get_box().overlaps(delRect))
+			if(c.getRectangle().overlaps(delRect))
 			{
 				chunks.remove(c);
 				break;
@@ -92,6 +93,22 @@ public class World {
 					Score.setScore(Score.getScore() + 10);
 					break;
 				}
+
+			}
+		}
+		for(Chunk c:chunks){
+			for(JumpPowerup co:c.getJumpCoins()){
+				if(co.getBounds().overlaps(delRect)){
+					c.getCoins().remove(co);
+					break;			
+				}
+				if(co.getBounds().overlaps(player.getBounds())){
+					c.getJumpCoins().remove(co);
+					this.player.setUsedJump(false);
+					this.player.setDoubleJump(true);
+					break;
+				}
+				
 			}
 		}
 		
@@ -102,13 +119,28 @@ public class World {
 			switch(random)
 			{
 			case 1:
-				 AddChunk(amount,0,1,1,1);
+				 AddChunk(amount, 0, 2, 1, 2);
+					for (int i = 0; i < 3; i++) {
+						AddChunk(amount, 0, 2, i, 2);
+					}
 				break;
 			case 2:
-				 AddChunk(amount,0,1,2,2);
+				 AddChunk(amount,0,2,2,2);
+				 AddChunk(amount,0,2,3,2);
+				 AddChunk(amount,0,2,4,2);
+				 AddChunk(amount,0,0,0,2);
+				 AddChunk(amount,0,0,0,2);
+				 AddChunk(amount,0,2,4,2);
+				 AddChunk(amount,0,2,3,2);
+				 AddChunk(amount,0,2,2,2);
 				break;
 			case 3:
-				 AddChunk(amount,0,1,2,3);
+				 AddChunk(amount,0,2,1,3);
+				 AddChunk(amount-64,3*32,2,1,3);
+				 AddChunk(amount,0,2,1,3);
+				 AddChunk(amount-64,3*32,2,1,3);
+				 AddChunk(amount,0,2,1,3);
+				 AddChunk(amount-64,3*32,2,1,3);
 				break;
 			case 4:
 				 AddChunk(amount,0,3,2,1);
@@ -117,7 +149,18 @@ public class World {
 				 AddChunk(amount,0,1,3,3);
 				break;
 			case 6:
-				 AddChunk(amount,0,1,3,2);
+				 AddChunk(amount,0,6,2,2);
+				break;
+			case 7:
+				 AddChunk(amount,0,1,2,2);
+				 AddChunk(amount+32,0,1,3,2);
+				 AddChunk(amount,0,1,4,2);
+				 AddChunk(amount+32,0,1,1,2);
+				 AddChunk(amount,0,1,1,2);
+				 AddChunk(amount+32,0,1,2,2);
+				break;
+			case 8:
+				 AddChunk(amount,0,5,2,2);
 				break;
 			default:
 				break;
